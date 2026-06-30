@@ -1,0 +1,26 @@
+{{/* Runs on `chezmoi init`. Prompts once for essentials; optional vars default
+     to empty and are set deliberately (e.g. to enable commit signing or a
+     per-directory work identity). */}}
+{{- $profile := promptStringOnce . "profile" "Profile (personal or work)" -}}
+{{- $name := promptStringOnce . "name" "Full name for git" -}}
+{{- $email := promptStringOnce . "email" "Git email for this profile" -}}
+{{- $githubUser := promptStringOnce . "githubUser" "GitHub username" -}}
+{{- /* Optional — keep any value already set, else default empty (no prompt). */ -}}
+{{- $signingKey := index . "signingKey" | default "" -}}
+{{- $workEmail := index . "workEmail" | default "" -}}
+{{- $workName := index . "workName" | default "" -}}
+{{- $workDir := index . "workDir" | default "" -}}
+{{- $workSigningKey := index . "workSigningKey" | default "" -}}
+
+sourceDir = {{ .chezmoi.sourceDir | quote }}
+
+[data]
+    profile = {{ $profile | quote }}
+    name = {{ $name | quote }}
+    email = {{ $email | quote }}
+    githubUser = {{ $githubUser | quote }}
+    signingKey = {{ $signingKey | quote }}
+    workEmail = {{ $workEmail | quote }}
+    workName = {{ $workName | quote }}
+    workDir = {{ $workDir | quote }}
+    workSigningKey = {{ $workSigningKey | quote }}

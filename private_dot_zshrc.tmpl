@@ -1,0 +1,83 @@
+# ~/.zshrc — interactive zsh config. Managed by chezmoi (profile: {{ .profile }}).
+# Load order matters: compinit → autosuggestions → runtimes/tools → modules →
+# prompt → syntax-highlighting (which must be LAST).
+
+# ----------------------------------------------------------------------------
+# Environment
+# ----------------------------------------------------------------------------
+# Default editor (git commit messages, chezmoi edit, etc.).
+# nano = friendly in-terminal exit (^O save, ^X quit). Swap to "cursor --wait"
+# or "vim" if you prefer.
+export EDITOR="nano"
+export VISUAL="$EDITOR"
+
+# ----------------------------------------------------------------------------
+# Completions (XDG-clean: keep the zcompdump out of $HOME)
+# ----------------------------------------------------------------------------
+ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-${HOST}-${ZSH_VERSION}"
+mkdir -p "${ZSH_COMPDUMP:h}"
+# Homebrew's completion functions
+if type brew &>/dev/null; then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+fi
+autoload -Uz compinit
+compinit -d "$ZSH_COMPDUMP"
+
+# ----------------------------------------------------------------------------
+# Autosuggestions (load before syntax-highlighting)
+# ----------------------------------------------------------------------------
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# ----------------------------------------------------------------------------
+# Runtimes
+# ----------------------------------------------------------------------------
+# Node & friends via mise (replaces nvm + brew node@22; reads .nvmrc /
+# .node-version / .tool-versions / mise.toml per project automatically).
+eval "$(mise activate zsh)"
+
+# conda: lazy-load. Keeps every shell fast; running `conda` initializes it
+# on first use (for notebooks / legacy envs).
+conda() {
+  unset -f conda
+  __conda_setup="$("$HOME/miniconda3/bin/conda" 'shell.zsh' 'hook' 2>/dev/null)"
+  if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+  elif [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
+    . "$HOME/miniconda3/etc/profile.d/conda.sh"
+  fi
+  unset __conda_setup
+  conda "$@"
+}
+
+# ----------------------------------------------------------------------------
+# Modern CLI tools
+# ----------------------------------------------------------------------------
+# zoxide: smart cd (replaces `cd` directly; `cdi` for interactive pick).
+export _ZO_DOCTOR=0
+eval "$(zoxide init zsh --cmd cd)"
+
+# fzf: fuzzy finder
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+source <(fzf --zsh)
+
+# ----------------------------------------------------------------------------
+# Aliases & functions (modular)
+# ----------------------------------------------------------------------------
+source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/aliases.zsh"
+source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/functions.zsh"
+
+# ----------------------------------------------------------------------------
+# Prompt
+# ----------------------------------------------------------------------------
+eval "$(starship init zsh)"
+
+# ----------------------------------------------------------------------------
+# 1Password shell plugins (gh, stripe, ... biometric-backed in interactive shells)
+# ----------------------------------------------------------------------------
+[ -f "$HOME/.config/op/plugins.sh" ] && source "$HOME/.config/op/plugins.sh"
+
+# ----------------------------------------------------------------------------
+# Syntax highlighting — MUST be sourced last
+# ----------------------------------------------------------------------------
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

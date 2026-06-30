@@ -1,0 +1,6 @@
+{{ if .signingKey -}}
+{{ .email }} {{ .signingKey }}
+{{ if and .workEmail .workSigningKey -}}
+{{ .workEmail }} {{ .workSigningKey }}
+{{ end -}}
+{{ end -}}

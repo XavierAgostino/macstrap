@@ -1,0 +1,16 @@
+# gitleaks configuration for the dotfiles repo.
+# Extends the upstream default ruleset; add allowlist entries only for
+# CONFIRMED false positives.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Dotfiles allowlist"
+# 1Password secret references are pointers, not secrets — they are the whole point.
+regexes = [
+  '''op://[^\s"']+''',
+]
+paths = [
+  '''\.gitleaks\.toml''',
+  '''README\.md''',
+]

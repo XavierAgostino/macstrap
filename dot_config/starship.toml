@@ -1,0 +1,99 @@
+format = """
+$directory$git_branch$git_status
+$character"""
+
+right_format = ""
+
+add_newline = false
+
+palette = "vesper"
+
+[palettes.vesper]
+lavender = "#a8a0cc"
+lavender_dim = "#8f89aa"
+pink = "#d996c8"
+green = "#8fb59c"
+peach = "#e0b18f"
+red = "#f4777f"
+gray = "#8a8a8a"
+white = "#eeeeee"
+
+[directory]
+style = "lavender"
+truncation_length = 0
+truncate_to_repo = false
+format = "[$path]($style)"
+home_symbol = "~"
+read_only = " ro"
+read_only_style = "red"
+
+[git_branch]
+style = "#c3b3c4"
+format = "  [$branch]($style)"
+truncation_length = 28
+truncation_symbol = "…"
+
+[git_state]
+style = "#c3b3c4"
+format = " [$state( $progress_current/$progress_total)]($style)"
+
+[git_status]
+style = "#c3b3c4"
+format = "[$all_status$ahead_behind]($style)"
+conflicted = " !${count}"
+ahead = " ⇡${count}"
+behind = " ⇣${count}"
+diverged = " ⇡${ahead_count}⇣${behind_count}"
+up_to_date = ""
+untracked = " ?${count}"
+stashed = " s${count}"
+modified = " x${count}"
+staged = " +${count}"
+renamed = " »${count}"
+deleted = " -${count}"
+
+[character]
+success_symbol = "[❯](#c892ab)"
+error_symbol = "[❯](#c97a90)"
+vimcmd_symbol = "[❮](#c892ab)"
+
+[aws]
+disabled = true
+
+[gcloud]
+disabled = true
+
+[azure]
+disabled = true
+
+[docker_context]
+disabled = true
+
+[nodejs]
+disabled = true
+
+[python]
+disabled = true
+
+[rust]
+disabled = true
+
+[golang]
+disabled = true
+
+[package]
+disabled = true
+
+[cmd_duration]
+disabled = false
+min_time = 1200
+format = "  [${duration}](gray)"
+
+[time]
+disabled = true
+
+[username]
+disabled = true
+
+[hostname]
+disabled = true

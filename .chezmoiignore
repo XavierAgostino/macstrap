@@ -1,0 +1,16 @@
+# Repo-only files/dirs — managed in git, NOT applied to $HOME by chezmoi.
+.git
+.github
+.gitignore
+.gitleaks.toml
+README.md
+LICENSE
+ai
+brew
+docs
+scripts
+
+# Work git identity is only materialized when a workEmail is configured.
+{{ if not (index . "workEmail") }}.config/git/work.gitconfig{{ end }}
+# Allowed-signers only when commit signing is configured.
+{{ if not (index . "signingKey") }}.config/git/allowed_signers{{ end }}

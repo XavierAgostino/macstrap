@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#
+# Pre-commit hook: block secrets from ever entering the dotfiles repo.
+# Version-controlled at scripts/hooks/pre-commit and activated by setting
+#   git config core.hooksPath scripts/hooks
+# (the bootstrap script does this automatically on a fresh machine).
+#
+set -euo pipefail
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "Warning: gitleaks not found — skipping secret scan."
+  echo "   Install with: brew install gitleaks  (then commits are scanned automatically)"
+  exit 0
+fi
+
+# Scan only what is staged for this commit.
+if ! gitleaks protect --staged --redact --no-banner; then
+  echo ""
+  echo "Blocked: gitleaks detected a potential secret in your staged changes."
+  echo "   This repo must contain op:// references and templates ONLY — never real values."
+  echo "   Fix the finding, or if it is a confirmed false positive, allowlist it in .gitleaks.toml."
+  exit 1
+fi

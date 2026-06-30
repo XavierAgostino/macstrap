@@ -1,0 +1,42 @@
+# Brewfile.core — the essential CLI toolchain + terminal. Installed on EVERY machine.
+# Install:  brew bundle --file=brew/Brewfile.core
+# Only top-level (leaf) packages are listed; Homebrew pulls dependencies itself.
+
+# --- Dotfile & environment management ---
+brew "chezmoi"                        # dotfile manager (this repo is its source)
+brew "mise"                           # polyglot runtime manager (node, python, go, ...)
+brew "gitleaks"                       # secret scanner (pre-commit hook)
+brew "shellcheck"                     # shell script linter (CI)
+
+# --- Git & GitHub ---
+brew "gh"                             # GitHub CLI
+brew "git-delta"                      # syntax-highlighted git pager
+brew "git-lfs"                        # large file storage
+
+# --- Modern CLI (the good stuff) ---
+brew "bat"                            # cat + syntax highlighting
+brew "eza"                            # modern ls
+brew "fd"                             # modern find
+brew "fzf"                            # fuzzy finder
+brew "ripgrep"                        # fast grep
+brew "zoxide"                         # smart cd
+brew "jq"                             # JSON processor
+brew "tree"                           # directory trees
+brew "htop"                           # process viewer
+brew "tealdeer"                       # fast tldr (simplified man pages)
+brew "tmux"                           # terminal multiplexer
+brew "wget"                           # file retriever
+
+# --- Language package managers ---
+brew "pnpm"                           # JS package manager
+brew "uv"                             # Python package/venv manager
+
+# --- Shell plugins ---
+brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
+
+# --- Terminal, secrets, fonts ---
+cask "ghostty"                        # GPU-accelerated terminal
+cask "1password-cli"                  # op — secrets workflow
+cask "font-geist-mono"                # terminal font
+cask "font-jetbrains-mono-nerd-font"  # nerd font (icons/glyphs)

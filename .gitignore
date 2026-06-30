@@ -1,0 +1,31 @@
+# --- OS / editor noise ---
+.DS_Store
+*.swp
+*~
+.idea/
+.vscode/
+
+# --- Secrets & local-only (never commit real values) ---
+# This repo stores op:// references and templates ONLY — never resolved secrets.
+*.env
+.env
+.env.*
+!.env.example
+*.local
+*_secret*
+*secret_*
+*.key
+*.pem
+id_rsa*
+id_ed25519*
+*.p12
+*.pfx
+
+# --- chezmoi local state ---
+# chezmoi's own machine-local config (may contain resolved data)
+.chezmoi.toml
+chezmoi.toml
+
+# --- Generated / transient ---
+*.log
+.cache/

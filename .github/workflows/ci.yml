@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  shellcheck:
+    name: Shellcheck scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Lint
+        run: shellcheck scripts/*.sh scripts/hooks/pre-commit
+
+  chezmoi:
+    name: chezmoi render + Brewfile parse
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install chezmoi
+        run: brew install chezmoi
+      - name: Init with test data and dry-run apply (validates templates render)
+        run: |
+          chezmoi init --source="$PWD" \
+            --promptString profile=personal \
+            --promptString "name=CI Test" \
+            --promptString email=ci@example.com \
+            --promptString githubUser=ci
+          chezmoi apply --dry-run --verbose
+      - name: Validate Brewfiles parse
+        run: |
+          for f in brew/Brewfile.*; do
+            echo "== $f =="
+            brew bundle list --file="$f" >/dev/null
+          done

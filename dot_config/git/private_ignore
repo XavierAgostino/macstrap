@@ -1,0 +1,18 @@
+# Global gitignore (XDG: ~/.config/git/ignore). Personal/OS noise only —
+# project-specific ignores belong in each repo's own .gitignore.
+
+# Claude Code local settings (machine-specific, never shared)
+**/.claude/settings.local.json
+
+# macOS
+.DS_Store
+.AppleDouble
+._*
+.Spotlight-V100
+.Trashes
+
+# Editor / tooling scratch
+*.swp
+*~
+.idea/
+*.code-workspace

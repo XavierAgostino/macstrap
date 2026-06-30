@@ -1,0 +1,13 @@
+# Brewfile.work — extras for your WORK profile only (example).
+# Installed when `profile = work`. Fill in your company's stack.
+# Install:  brew bundle --file=brew/Brewfile.work
+#
+# Common candidates — uncomment / edit:
+# brew "awscli"                       # or: google-cloud-sdk, azure-cli
+# brew "terraform"
+# brew "kubernetes-cli"               # kubectl
+# brew "postgresql@16"
+# cask "docker"                       # if your team standardizes on Docker Desktop
+# cask "dbeaver-community"
+#
+# Keep company-internal tooling referenced by name only — never secrets.

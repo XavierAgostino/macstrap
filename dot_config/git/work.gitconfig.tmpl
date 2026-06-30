@@ -1,0 +1,10 @@
+{{- if .workEmail -}}
+# Work identity. Applied via includeIf in ~/.gitconfig to repos under {{ .workDir }}.
+# Managed by chezmoi — rendered only when workEmail is set.
+[user]
+	name = {{ .workName | default .name }}
+	email = {{ .workEmail }}
+{{- if .workSigningKey }}
+	signingkey = {{ .workSigningKey }}
+{{- end }}
+{{ end -}}

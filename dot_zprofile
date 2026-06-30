@@ -1,0 +1,12 @@
+# Homebrew first (Apple Silicon canonical setup).
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# User-local binaries after Homebrew.
+path=("$HOME/.local/bin" $path)
+
+# Deduplicate while preserving first occurrence order.
+typeset -U path PATH
+
+# Added by OrbStack: command-line tools and integration
+# This won't be added again if you remove it.
+source ~/.orbstack/shell/init.zsh 2>/dev/null || :

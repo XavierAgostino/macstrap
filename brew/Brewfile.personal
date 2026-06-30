@@ -1,0 +1,10 @@
+# Brewfile.personal — extras for your PERSONAL profile only (example).
+# Installed when `profile = personal`. Replace these with your own picks.
+# Install:  brew bundle --file=brew/Brewfile.personal
+
+# Examples — uncomment / edit to taste:
+# brew "ffmpeg"
+# brew "pandoc"
+# cask "steam"
+# cask "transmission"
+# cask "spotify"            # (already in Brewfile.apps; move here if you prefer)

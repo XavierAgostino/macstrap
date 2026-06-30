@@ -1,0 +1,37 @@
+[user]
+	name = {{ .name }}
+	email = {{ .email }}
+{{- if .signingKey }}
+	signingkey = {{ .signingKey }}
+{{- end }}
+[init]
+	defaultBranch = main
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[core]
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	line-numbers = true
+	side-by-side = true
+{{- if .signingKey }}
+# --- SSH commit signing via 1Password (gives the "Verified" badge on GitHub) ---
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+	allowedSignersFile = ~/.config/git/allowed_signers
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true
+{{- end }}
+{{- if and .workEmail .workDir }}
+# --- Per-directory work identity: repos under {{ .workDir }} use the work identity ---
+[includeIf "gitdir:{{ .workDir }}/"]
+	path = ~/.config/git/work.gitconfig
+{{- end }}
