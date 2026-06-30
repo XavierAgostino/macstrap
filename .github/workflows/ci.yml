@@ -23,14 +23,22 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install chezmoi
         run: brew install chezmoi
-      - name: Init with test data and dry-run apply (validates templates render)
+      - name: Seed test config (no interactive prompts) and dry-run apply
         run: |
-          chezmoi init --source="$PWD" \
-            --promptString profile=personal \
-            --promptString "name=CI Test" \
-            --promptString email=ci@example.com \
-            --promptString githubUser=ci
-          chezmoi apply --dry-run --verbose
+          mkdir -p ~/.config/chezmoi
+          cat > ~/.config/chezmoi/chezmoi.toml <<'EOF'
+          [data]
+              profile = "personal"
+              name = "CI User"
+              email = "ci@example.com"
+              githubUser = "ci"
+              signingKey = ""
+              workEmail = ""
+              workName = ""
+              workDir = ""
+              workSigningKey = ""
+          EOF
+          chezmoi apply --source="$PWD" --dry-run --verbose
       - name: Validate Brewfiles parse
         run: |
           for f in brew/Brewfile.*; do

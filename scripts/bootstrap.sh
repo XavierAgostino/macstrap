@@ -55,7 +55,7 @@ log "Installing runtimes via mise"; mise install || true
 [[ -z "$PROFILE" ]] && PROFILE="$(chezmoi execute-template '{{ .profile }}' 2>/dev/null || true)"
 log "Installing Homebrew packages: core${APPS:+ + apps}${PROFILE:+ + $PROFILE}"
 brew bundle --file="$DOTFILES_DIR/brew/Brewfile.core" || true
-[[ "$APPS" == "1" ]] && brew bundle --file="$DOTFILES_DIR/brew/Brewfile.apps" || true
+if [[ "$APPS" == "1" ]]; then brew bundle --file="$DOTFILES_DIR/brew/Brewfile.apps" || true; fi
 case "$PROFILE" in
   personal) brew bundle --file="$DOTFILES_DIR/brew/Brewfile.personal" || true ;;
   work)     brew bundle --file="$DOTFILES_DIR/brew/Brewfile.work" || true ;;
