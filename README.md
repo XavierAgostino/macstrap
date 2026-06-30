@@ -15,15 +15,10 @@ brand-new Mac is fully configured in minutes.
 
 <br/>
 
-![macOS](https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=white)
-![Homebrew](https://img.shields.io/badge/Homebrew-FBB040?logo=homebrew&logoColor=white)
-![chezmoi](https://img.shields.io/badge/chezmoi-2B9FE1?logo=chezmoi&logoColor=white)
-![mise](https://img.shields.io/badge/mise-FA5B3D?logoColor=white)
-![Starship](https://img.shields.io/badge/Starship-DD0B78?logo=starship&logoColor=white)
-![Ghostty](https://img.shields.io/badge/Ghostty-1B1B1D?logoColor=white)
-![Zsh](https://img.shields.io/badge/Zsh-1A2C34?logo=zsh&logoColor=white)
-![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)
-![1Password](https://img.shields.io/badge/1Password-3B66BC?logo=1password&logoColor=white)
+<img src=".github/assets/logos/homebrew.svg" height="30" alt="Homebrew"/>&nbsp;&nbsp;&nbsp;
+<img src=".github/assets/logos/ghostty.svg" height="30" alt="Ghostty"/>&nbsp;&nbsp;&nbsp;
+<img src=".github/assets/logos/pnpm.svg" height="30" alt="pnpm"/>&nbsp;&nbsp;&nbsp;
+<img src=".github/assets/logos/onepassword.svg" height="30" alt="1Password"/>
 
 </div>
 
@@ -68,33 +63,34 @@ The bootstrap is **idempotent** — safe to re-run anytime. Skip the GUI apps wi
 
 ## What's installed
 
-**Toolchain (always):**
+**Toolchain (always):** `chezmoi` · `mise` · `starship` · `ghostty` · `zsh`
+(+ autosuggestions & syntax-highlighting) · `git` + `delta` · `gh` · `eza` ·
+`bat` · `fd` · `ripgrep` · `fzf` · `zoxide` · `jq` · `tmux` · `pnpm` · `uv` ·
+`1password` + `1password-cli`
 
-![Homebrew](https://img.shields.io/badge/Homebrew-FBB040?logo=homebrew&logoColor=white)
-![mise](https://img.shields.io/badge/mise-FA5B3D?logoColor=white)
-![Starship](https://img.shields.io/badge/Starship-DD0B78?logo=starship&logoColor=white)
-![Ghostty](https://img.shields.io/badge/Ghostty-1B1B1D?logoColor=white)
-![pnpm](https://img.shields.io/badge/pnpm-F69220?logo=pnpm&logoColor=white)
-![uv](https://img.shields.io/badge/uv-DE5FE9?logoColor=white)
-![GitHub CLI](https://img.shields.io/badge/gh-181717?logo=github&logoColor=white)
-![tmux](https://img.shields.io/badge/tmux-1BB91F?logo=tmux&logoColor=white)
+**Apps** — installed out of the box (`brew/Brewfile.apps`, trim freely):
 
-**Apps (the `Brewfile.apps` starter — installed out of the box, trim freely):**
-
-![Cursor](https://img.shields.io/badge/Cursor-000000?logo=cursor&logoColor=white)
-![VS Code](https://img.shields.io/badge/VS%20Code-007ACC?logo=visualstudiocode&logoColor=white)
-![Claude](https://img.shields.io/badge/Claude%20Code-D97757?logo=anthropic&logoColor=white)
-![Chrome](https://img.shields.io/badge/Chrome-4285F4?logo=googlechrome&logoColor=white)
-![Raycast](https://img.shields.io/badge/Raycast-FF6363?logo=raycast&logoColor=white)
-![Rectangle](https://img.shields.io/badge/Rectangle-1A1A1A?logoColor=white)
-![OrbStack](https://img.shields.io/badge/OrbStack-1A1A1A?logoColor=white)
-![TablePlus](https://img.shields.io/badge/TablePlus-2A6FF4?logoColor=white)
-![Obsidian](https://img.shields.io/badge/Obsidian-7C3AED?logo=obsidian&logoColor=white)
-![Notion](https://img.shields.io/badge/Notion-000000?logo=notion&logoColor=white)
-![Figma](https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=white)
-![Slack](https://img.shields.io/badge/Slack-4A154B?logo=slack&logoColor=white)
-![Zoom](https://img.shields.io/badge/Zoom-0B5CFF?logo=zoom&logoColor=white)
-![Spotify](https://img.shields.io/badge/Spotify-1DB954?logo=spotify&logoColor=white)
+<div align="center">
+<table>
+  <tr>
+    <td align="center" width="105"><img src=".github/assets/logos/cursor.svg" height="38" alt=""/><br/><sub><b>Cursor</b></sub></td>
+    <td align="center" width="105"><img src=".github/assets/logos/vscode.svg" height="38" alt=""/><br/><sub><b>VS Code</b></sub></td>
+    <td align="center" width="105"><img src=".github/assets/logos/claude.svg" height="38" alt=""/><br/><sub><b>Claude Code</b></sub></td>
+    <td align="center" width="105"><img src=".github/assets/logos/chrome.svg" height="38" alt=""/><br/><sub><b>Chrome</b></sub></td>
+    <td align="center" width="105"><img src=".github/assets/logos/raycast.svg" height="38" alt=""/><br/><sub><b>Raycast</b></sub></td>
+    <td align="center" width="105"><img src=".github/assets/logos/figma.svg" height="38" alt=""/><br/><sub><b>Figma</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="105"><img src=".github/assets/logos/slack.svg" height="38" alt=""/><br/><sub><b>Slack</b></sub></td>
+    <td align="center" width="105"><img src=".github/assets/logos/zoom.svg" height="38" alt=""/><br/><sub><b>Zoom</b></sub></td>
+    <td align="center" width="105"><img src=".github/assets/logos/notion.svg" height="38" alt=""/><br/><sub><b>Notion</b></sub></td>
+    <td align="center" width="105"><img src=".github/assets/logos/obsidian.svg" height="38" alt=""/><br/><sub><b>Obsidian</b></sub></td>
+    <td align="center" width="105"><img src=".github/assets/logos/spotify.svg" height="38" alt=""/><br/><sub><b>Spotify</b></sub></td>
+    <td align="center" width="105"><img src=".github/assets/logos/ghostty.svg" height="38" alt=""/><br/><sub><b>Ghostty</b></sub></td>
+  </tr>
+</table>
+<sub>+ OrbStack &nbsp;·&nbsp; TablePlus &nbsp;·&nbsp; Rectangle</sub>
+</div>
 
 Edit `brew/Brewfile.{core,apps,personal,work}` to make it yours.
 
