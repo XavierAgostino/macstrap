@@ -15,10 +15,7 @@ brand-new Mac is fully configured in minutes.
 
 <br/>
 
-<img src=".github/assets/logos/homebrew.svg" height="30" alt="Homebrew"/>&nbsp;&nbsp;&nbsp;
-<img src=".github/assets/logos/ghostty.svg" height="30" alt="Ghostty"/>&nbsp;&nbsp;&nbsp;
-<img src=".github/assets/logos/pnpm.svg" height="30" alt="pnpm"/>&nbsp;&nbsp;&nbsp;
-<img src=".github/assets/logos/onepassword.svg" height="30" alt="1Password"/>
+<img src=".github/assets/demo.gif" width="780" alt="macstrap demo"/>
 
 </div>
 
@@ -38,8 +35,9 @@ bash ~/Developer/workspaces/macstrap/scripts/bootstrap.sh
 # 3. Open a new terminal (or: exec zsh)
 ```
 
-The bootstrap is **idempotent** — safe to re-run anytime. Skip the GUI apps with
-`APPS=0`, or preset the profile with `PROFILE=work`.
+> [!TIP]
+> The bootstrap is **idempotent** — safe to re-run anytime. Skip the GUI apps
+> with `APPS=0`, or preset the profile with `PROFILE=work`.
 
 ## What you get
 
@@ -68,31 +66,37 @@ The bootstrap is **idempotent** — safe to re-run anytime. Skip the GUI apps wi
 `bat` · `fd` · `ripgrep` · `fzf` · `zoxide` · `jq` · `tmux` · `pnpm` · `uv` ·
 `1password` + `1password-cli`
 
-**Apps** — installed out of the box (`brew/Brewfile.apps`, trim freely):
+**Apps** — installed out of the box (`brew/Brewfile.apps`):
 
 <div align="center">
 <table>
   <tr>
-    <td align="center" width="105"><img src=".github/assets/logos/cursor.svg" height="38" alt=""/><br/><sub><b>Cursor</b></sub></td>
-    <td align="center" width="105"><img src=".github/assets/logos/vscode.svg" height="38" alt=""/><br/><sub><b>VS Code</b></sub></td>
-    <td align="center" width="105"><img src=".github/assets/logos/claude.svg" height="38" alt=""/><br/><sub><b>Claude Code</b></sub></td>
-    <td align="center" width="105"><img src=".github/assets/logos/chrome.svg" height="38" alt=""/><br/><sub><b>Chrome</b></sub></td>
-    <td align="center" width="105"><img src=".github/assets/logos/raycast.svg" height="38" alt=""/><br/><sub><b>Raycast</b></sub></td>
-    <td align="center" width="105"><img src=".github/assets/logos/figma.svg" height="38" alt=""/><br/><sub><b>Figma</b></sub></td>
+    <td align="center" width="104"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/logos/cursor-dark.svg"><img src=".github/assets/logos/cursor.svg" height="36" alt=""/></picture><br/><sub><b>Cursor</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/vscode.svg" height="36" alt=""/><br/><sub><b>VS Code</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/claude.svg" height="36" alt=""/><br/><sub><b>Claude Code</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/chrome.svg" height="36" alt=""/><br/><sub><b>Chrome</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/ghostty.svg" height="36" alt=""/><br/><sub><b>Ghostty</b></sub></td>
   </tr>
   <tr>
-    <td align="center" width="105"><img src=".github/assets/logos/slack.svg" height="38" alt=""/><br/><sub><b>Slack</b></sub></td>
-    <td align="center" width="105"><img src=".github/assets/logos/zoom.svg" height="38" alt=""/><br/><sub><b>Zoom</b></sub></td>
-    <td align="center" width="105"><img src=".github/assets/logos/notion.svg" height="38" alt=""/><br/><sub><b>Notion</b></sub></td>
-    <td align="center" width="105"><img src=".github/assets/logos/obsidian.svg" height="38" alt=""/><br/><sub><b>Obsidian</b></sub></td>
-    <td align="center" width="105"><img src=".github/assets/logos/spotify.svg" height="38" alt=""/><br/><sub><b>Spotify</b></sub></td>
-    <td align="center" width="105"><img src=".github/assets/logos/ghostty.svg" height="38" alt=""/><br/><sub><b>Ghostty</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/raycast.svg" height="36" alt=""/><br/><sub><b>Raycast</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/rectangle.png" height="36" alt=""/><br/><sub><b>Rectangle</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/orbstack.png" height="36" alt=""/><br/><sub><b>OrbStack</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/tableplus.png" height="36" alt=""/><br/><sub><b>TablePlus</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/figma.svg" height="36" alt=""/><br/><sub><b>Figma</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="104"><img src=".github/assets/logos/slack.svg" height="36" alt=""/><br/><sub><b>Slack</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/zoom.svg" height="36" alt=""/><br/><sub><b>Zoom</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/notion.svg" height="36" alt=""/><br/><sub><b>Notion</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/obsidian.svg" height="36" alt=""/><br/><sub><b>Obsidian</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/spotify.svg" height="36" alt=""/><br/><sub><b>Spotify</b></sub></td>
   </tr>
 </table>
-<sub>+ OrbStack &nbsp;·&nbsp; TablePlus &nbsp;·&nbsp; Rectangle</sub>
 </div>
 
-Edit `brew/Brewfile.{core,apps,personal,work}` to make it yours.
+> [!TIP]
+> Edit `brew/Brewfile.{core,apps,personal,work}` to make the toolset yours —
+> `Brewfile.apps` has more options commented out.
 
 ## Structure
 
@@ -115,6 +119,11 @@ git identity, which Brewfiles install, and commit signing — so the same repo
 configures a personal laptop and a locked-down work machine correctly. See
 [`docs/work-separation.md`](docs/work-separation.md).
 
+> [!IMPORTANT]
+> With signing enabled, commits are signed through 1Password, so **1Password must
+> be unlocked** to commit (a quick Touch ID prompt). Bypass a single commit with
+> `git commit --no-gpg-sign`.
+
 ## Make it yours
 
 1. Fork this repo.
@@ -122,8 +131,9 @@ configures a personal laptop and a locked-down work machine correctly. See
 3. Run `REPO_SLUG=you/macstrap bash scripts/bootstrap.sh` (or clone your fork and
    run the bootstrap).
 
-Your name, email, and signing key are **never committed** — they live in
-machine-local chezmoi config, so a fork is generic by default.
+> [!NOTE]
+> Your name, email, and signing key are **never committed** — they live in
+> machine-local chezmoi config, so a fork is generic by default.
 
 ## Why it's built this way
 
