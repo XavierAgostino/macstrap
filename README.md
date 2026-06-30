@@ -1,6 +1,6 @@
 <div align="center">
 
-# macstrap
+<h1><picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/logos/apple-dark.svg"><img src=".github/assets/logos/apple-light.svg" height="26" alt=""/></picture>&nbsp; macstrap</h1>
 
 ### Bootstrap a modern macOS dev environment — in one command.
 
@@ -66,7 +66,7 @@ bash ~/Developer/workspaces/macstrap/scripts/bootstrap.sh
 `bat` · `fd` · `ripgrep` · `fzf` · `zoxide` · `jq` · `tmux` · `pnpm` · `uv` ·
 `1password` + `1password-cli`
 
-**Apps** — installed out of the box (`brew/Brewfile.apps`):
+**Apps** — installed out of the box:
 
 <div align="center">
 <table>
@@ -74,18 +74,21 @@ bash ~/Developer/workspaces/macstrap/scripts/bootstrap.sh
     <td align="center" width="104"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/logos/cursor-dark.svg"><img src=".github/assets/logos/cursor.svg" height="36" alt=""/></picture><br/><sub><b>Cursor</b></sub></td>
     <td align="center" width="104"><img src=".github/assets/logos/vscode.svg" height="36" alt=""/><br/><sub><b>VS Code</b></sub></td>
     <td align="center" width="104"><img src=".github/assets/logos/claude.svg" height="36" alt=""/><br/><sub><b>Claude Code</b></sub></td>
-    <td align="center" width="104"><img src=".github/assets/logos/chrome.svg" height="36" alt=""/><br/><sub><b>Chrome</b></sub></td>
     <td align="center" width="104"><img src=".github/assets/logos/ghostty.svg" height="36" alt=""/><br/><sub><b>Ghostty</b></sub></td>
   </tr>
   <tr>
+    <td align="center" width="104"><img src=".github/assets/logos/chrome.svg" height="36" alt=""/><br/><sub><b>Chrome</b></sub></td>
     <td align="center" width="104"><img src=".github/assets/logos/raycast.svg" height="36" alt=""/><br/><sub><b>Raycast</b></sub></td>
     <td align="center" width="104"><img src=".github/assets/logos/rectangle.png" height="36" alt=""/><br/><sub><b>Rectangle</b></sub></td>
+    <td align="center" width="104"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/logos/onepassword-dark.svg"><img src=".github/assets/logos/onepassword.svg" height="36" alt=""/></picture><br/><sub><b>1Password</b></sub></td>
+  </tr>
+  <tr>
     <td align="center" width="104"><img src=".github/assets/logos/orbstack.png" height="36" alt=""/><br/><sub><b>OrbStack</b></sub></td>
     <td align="center" width="104"><img src=".github/assets/logos/tableplus.png" height="36" alt=""/><br/><sub><b>TablePlus</b></sub></td>
     <td align="center" width="104"><img src=".github/assets/logos/figma.svg" height="36" alt=""/><br/><sub><b>Figma</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/slack.svg" height="36" alt=""/><br/><sub><b>Slack</b></sub></td>
   </tr>
   <tr>
-    <td align="center" width="104"><img src=".github/assets/logos/slack.svg" height="36" alt=""/><br/><sub><b>Slack</b></sub></td>
     <td align="center" width="104"><img src=".github/assets/logos/zoom.svg" height="36" alt=""/><br/><sub><b>Zoom</b></sub></td>
     <td align="center" width="104"><img src=".github/assets/logos/notion.svg" height="36" alt=""/><br/><sub><b>Notion</b></sub></td>
     <td align="center" width="104"><img src=".github/assets/logos/obsidian.svg" height="36" alt=""/><br/><sub><b>Obsidian</b></sub></td>
