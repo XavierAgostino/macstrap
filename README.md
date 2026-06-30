@@ -79,20 +79,21 @@ The bootstrap is **idempotent** — safe to re-run anytime. Skip the GUI apps wi
 ![GitHub CLI](https://img.shields.io/badge/gh-181717?logo=github&logoColor=white)
 ![tmux](https://img.shields.io/badge/tmux-1BB91F?logo=tmux&logoColor=white)
 
-**Apps (the `Brewfile.apps` starter — trim freely):**
+**Apps (the `Brewfile.apps` starter — installed out of the box, trim freely):**
 
 ![Cursor](https://img.shields.io/badge/Cursor-000000?logo=cursor&logoColor=white)
 ![VS Code](https://img.shields.io/badge/VS%20Code-007ACC?logo=visualstudiocode&logoColor=white)
+![Claude](https://img.shields.io/badge/Claude%20Code-D97757?logo=anthropic&logoColor=white)
 ![Chrome](https://img.shields.io/badge/Chrome-4285F4?logo=googlechrome&logoColor=white)
-![Firefox](https://img.shields.io/badge/Firefox-FF7139?logo=firefoxbrowser&logoColor=white)
 ![Raycast](https://img.shields.io/badge/Raycast-FF6363?logo=raycast&logoColor=white)
+![Rectangle](https://img.shields.io/badge/Rectangle-1A1A1A?logoColor=white)
 ![OrbStack](https://img.shields.io/badge/OrbStack-1A1A1A?logoColor=white)
 ![TablePlus](https://img.shields.io/badge/TablePlus-2A6FF4?logoColor=white)
 ![Obsidian](https://img.shields.io/badge/Obsidian-7C3AED?logo=obsidian&logoColor=white)
 ![Notion](https://img.shields.io/badge/Notion-000000?logo=notion&logoColor=white)
 ![Figma](https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=white)
 ![Slack](https://img.shields.io/badge/Slack-4A154B?logo=slack&logoColor=white)
-![Discord](https://img.shields.io/badge/Discord-5865F2?logo=discord&logoColor=white)
+![Zoom](https://img.shields.io/badge/Zoom-0B5CFF?logo=zoom&logoColor=white)
 ![Spotify](https://img.shields.io/badge/Spotify-1DB954?logo=spotify&logoColor=white)
 
 Edit `brew/Brewfile.{core,apps,personal,work}` to make it yours.

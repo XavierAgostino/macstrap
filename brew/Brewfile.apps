@@ -1,39 +1,35 @@
-# Brewfile.apps — popular GUI apps to get a new machine productive fast.
-# An opinionated, industry-common starter set — TRIM what you don't want.
-# Install:  brew bundle --file=brew/Brewfile.apps
+# Brewfile.apps — modern-standard GUI apps, installed out of the box.
+# A focused, professional set most engineers reach for. TRIM what you don't want.
+# Install:  brew bundle --file=brew/Brewfile.apps   (or skip with APPS=0)
 
-# --- Browsers ---
-cask "google-chrome"
-cask "firefox"
-# cask "arc"                          # uncomment if you like Arc
-
-# --- Editors & IDEs ---
-cask "visual-studio-code"
+# --- Editors & AI ---
 cask "cursor"                         # AI-native editor
+cask "visual-studio-code"
 cask "claude-code"                    # terminal AI coding agent
 
-# --- Dev: containers, API, databases ---
-cask "orbstack"                       # fast Docker/Linux VMs (lighter than Docker Desktop)
-cask "tableplus"                      # database GUI
-cask "bruno"                          # open-source API client (Postman alternative)
+# --- Browser ---
+cask "google-chrome"
 
-# --- Launcher & window management (huge quality-of-life) ---
+# --- Launcher & window management (big quality-of-life) ---
 cask "raycast"                        # launcher / clipboard / window mgmt / scripts
 cask "rectangle"                      # keyboard window snapping
 
-# --- Productivity & notes ---
-cask "1password"                      # password manager (pairs with 1password-cli)
+# --- Dev: containers & databases ---
+cask "orbstack"                       # fast Docker/Linux VMs (lighter than Docker Desktop)
+cask "tableplus"                      # database GUI
+
+# --- Knowledge & docs ---
 cask "obsidian"                       # markdown knowledge base
 cask "notion"
+
+# --- Design ---
+cask "figma"
 
 # --- Communication ---
 cask "slack"
 cask "zoom"
-cask "discord"
 
-# --- Design & media ---
-cask "figma"
-cask "vlc"
+# --- Media ---
 cask "spotify"
 
 # --- Editor extensions (installed via the `code` CLI; best-effort) ---
@@ -44,3 +40,11 @@ vscode "eamodio.gitlens"
 vscode "ms-python.python"
 vscode "ms-azuretools.vscode-docker"
 vscode "pkief.material-icon-theme"
+
+# --- Optional (uncomment what you want) ---
+# cask "firefox"
+# cask "arc"
+# cask "bruno"                        # open-source API client (Postman alternative)
+# cask "discord"
+# cask "vlc"
+# cask "github"                       # GitHub Desktop

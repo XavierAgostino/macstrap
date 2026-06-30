@@ -37,6 +37,7 @@ brew "zsh-syntax-highlighting"
 
 # --- Terminal, secrets, fonts ---
 cask "ghostty"                        # GPU-accelerated terminal
+cask "1password"                      # password manager (SSH agent + commit signing)
 cask "1password-cli"                  # op — secrets workflow
 cask "font-geist-mono"                # terminal font
 cask "font-jetbrains-mono-nerd-font"  # nerd font (icons/glyphs)
