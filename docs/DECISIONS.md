@@ -45,6 +45,16 @@ in a public repo.)
 machine should not carry work-only tools. `core` is the shared toolchain, `apps`
 is the GUI starter set, and the profile picks the rest.
 
+## Optional CLI catalog (discovery, not default install)
+
+**Why:** project-specific CLIs (cloud, database, deploy, Kubernetes) shouldn't
+bloat every machine, but shouldn't be rediscovered from scratch either. So the
+core stays lean and `brew/cli.catalog` holds an opt-in menu that `macstrap cli`
+installs by group or name. Picks are recorded in `brew/selected.cli` and replayed
+by the installer, so the CLI stack is reproducible config, not a one-off install.
+**Trade-off:** the catalog is a curated list to maintain (formula names drift),
+so it's kept small and CI-validated rather than exhaustive.
+
 ## gitleaks pre-commit hook
 
 **Why:** the repo should contain `op://` references and templates only. A scanner

@@ -141,6 +141,9 @@ next machine. See [`docs/AGENT-USAGE.md`](docs/AGENT-USAGE.md).
   more *per project* (`.nvmrc` / `.tool-versions` aware). No nvm/pyenv soup.
 - **A great CLI toolbox**: `eza`, `bat`, `fd`, `ripgrep`, `fzf`, `zoxide`,
   `delta`, `jq`, `tmux`, preconfigured.
+- **Optional CLI catalog**: pull in project tools (Supabase, Stripe, AWS,
+  `kubectl`…) on demand with `macstrap cli` — recorded, so a fresh Mac replays
+  your picks.
 - **Terminal**: [Ghostty](https://ghostty.org) with a tuned config.
 - **Personal and work profiles**: one repo; the right identity, packages, and
   commit signing per machine, chosen at setup.
@@ -197,16 +200,18 @@ next machine. See [`docs/AGENT-USAGE.md`](docs/AGENT-USAGE.md).
 
 ## Structure
 
-```
+```text
 macstrap/
 ├── bin/macstrap                  # the CLI (symlinked to ~/.local/bin)
 ├── private_dot_zshrc.tmpl        # -> ~/.zshrc       (chezmoi templates)
 ├── dot_config/                   # -> ~/.config/*    (starship, ghostty, mise, zsh, git)
 ├── dot_gitconfig.tmpl            # -> ~/.gitconfig   (identity from profile)
-├── brew/Brewfile.{core,apps,personal,work} + apps.catalog
-├── scripts/                      # bootstrap, doctor, report, uninstall, security, hooks
+├── brew/                         # Brewfile.{core,apps,personal,work,dev}
+│                                 #   + apps.catalog, cli.catalog, selected.cli
+├── scripts/                      # bootstrap, cli, doctor, report, uninstall, security, lib/, hooks/
+├── demo/                         # scripted walkthroughs + VHS tapes (macstrap demo)
 ├── ai/                           # AI assistant config (Claude / Codex / Cursor)
-├── docs/                         # setup, decisions, troubleshooting, work/personal, agents
+├── docs/                         # setup, decisions, troubleshooting, work/personal, agents, demos
 └── .github/workflows/ci.yml
 ```
 
@@ -254,10 +259,12 @@ symlinks, mise over nvm/pyenv, profiles over branches, and more.
 
 ## Docs
 
-- [`docs/SETUP.md`](docs/SETUP.md): detailed setup
+- [`docs/SETUP.md`](docs/SETUP.md): detailed setup and the optional CLI catalog
 - [`docs/DECISIONS.md`](docs/DECISIONS.md): design rationale
 - [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md): fixes and recovery
 - [`docs/work-separation.md`](docs/work-separation.md): profiles, signing, compliance
+- [`docs/AGENT-USAGE.md`](docs/AGENT-USAGE.md): driving macstrap from CI or an agent
+- [`docs/DEMOS.md`](docs/DEMOS.md): how the demos and README GIFs are generated
 - [`docs/COLORS.md`](docs/COLORS.md): the Vesper color language
 - [`docs/adr/`](docs/adr/): architecture decision records
 

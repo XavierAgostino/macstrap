@@ -19,4 +19,4 @@ cp ai/CLAUDE.example.md ~/.claude/CLAUDE.md       # then edit to taste
 cp ai/claude-settings.json ~/.claude/settings.json
 ```
 
-These are a *starting point*, the whole value is making them sound like you.
+These are a *starting point* — the whole value is making them sound like you.
