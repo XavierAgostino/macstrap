@@ -22,7 +22,8 @@ macstrap: reproducible macOS developer setup
 Usage:
   macstrap install [--minimal|--headless] [--work|--personal]
                    [--apps|--no-apps] [--dry-run]
-  macstrap apps                 pick and install GUI apps interactively
+  macstrap apps [group|a,b,c]   pick GUI apps (interactive) or install a group/list
+  macstrap cli  [group|a,b,c]   install optional dev CLIs (interactive picker if no args)
   macstrap doctor [--json|--fix]
   macstrap diff                 preview pending dotfile changes
   macstrap apply                apply dotfile changes
@@ -37,6 +38,8 @@ Examples:
   macstrap install
   macstrap install --minimal
   macstrap install --work --apps
+  macstrap cli backend,ai
+  macstrap cli --list
   macstrap doctor --fix
 EOF
 }
@@ -66,7 +69,17 @@ case "$cmd" in
     done
     boot
     ;;
-  apps) APPS="interactive" boot ;;
+  apps)
+    if [[ $# -gt 0 ]]; then
+      APPS="$(
+        IFS=,
+        echo "$*"
+      )" boot
+    else
+      APPS="interactive" boot
+    fi
+    ;;
+  cli) bash "$ROOT_DIR/scripts/cli.sh" "$@" ;;
   doctor) bash "$ROOT_DIR/scripts/dev-doctor.sh" "$@" ;;
   report) bash "$ROOT_DIR/scripts/report.sh" ;;
   security) bash "$ROOT_DIR/scripts/security-check.sh" ;;

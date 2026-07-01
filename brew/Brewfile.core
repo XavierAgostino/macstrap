@@ -31,7 +31,8 @@ brew "wget"                           # file retriever
 brew "pnpm"                           # JS package manager
 brew "uv"                             # Python package/venv manager
 
-# --- Shell plugins ---
+# --- Prompt & shell plugins ---
+brew "starship"                       # cross-shell prompt (zshrc runs `starship init`)
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 

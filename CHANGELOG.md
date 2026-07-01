@@ -6,6 +6,39 @@ All notable changes to macstrap are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-07-01
+
+### Added
+
+- `macstrap cli`: an optional, project-specific CLI catalog
+  ([`brew/cli.catalog`](brew/cli.catalog)) with an interactive grouped picker and
+  group/name install (`macstrap cli backend,ai`, `macstrap cli supabase,stripe`,
+  `macstrap cli --list`). Discovery, not default install — nothing here ships with
+  the base bootstrap.
+- Reproducible selections: chosen CLIs are recorded in `brew/selected.cli`, which
+  the installer replays on a fresh machine (`install_selected_cli`). `macstrap
+  report` now lists recorded CLIs and whether each is installed.
+- `scripts/lib/catalog.sh`: shared catalog helpers used by both the installer and
+  `macstrap cli`.
+- `scripts/check-catalog.sh` (wired into CI): validates catalog rows and fails if
+  an optional CLI duplicates a `Brewfile.core` package.
+- ADR 0006: optional CLI catalog (discovery over default install).
+
+### Changed
+
+- Unified catalog schema `key|formula|kind|categories|description` across
+  `brew/apps.catalog` and `brew/cli.catalog`; `macstrap apps` now accepts a group
+  or explicit list (`macstrap apps design`) for parity with `macstrap cli`.
+- `starship` moved into `Brewfile.core` (the shipped zsh prompt runs `starship
+  init`, so it is a core dependency, not optional).
+
+### Fixed
+
+- Selection parsing dropped the final comma-separated token (missing trailing
+  newline before `read`); single-token selections like `macstrap apps design` now
+  resolve correctly.
+- The dry-run plan no longer prints a doubled `0` for an empty app count.
+
 ## [0.5.0] - 2026-06-30
 
 ### Added
