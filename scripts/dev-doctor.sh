@@ -75,39 +75,63 @@ echo "== macstrap dev-doctor =="
 echo "Date: $(date)"
 echo
 
-echo "-- Checks --"
-run_checks | while IFS=$'\t' read -r k v; do
-  case "$v" in
-    ok) c=$'\033[32m' ;;
-    warning | locked | off) c=$'\033[33m' ;;
-    *) c=$'\033[31m' ;;
+# Grouped, scannable layout. Statuses come from the same run_checks used by --json.
+g=$'\033[32m'
+y=$'\033[33m'
+r=$'\033[31m'
+x=$'\033[0m'
+CHECKS="$(run_checks)"
+status() { printf '%s\n' "$CHECKS" | awk -F'\t' -v k="$1" '$1 == k { print $2; exit }'; }
+paint() {
+  case "$1" in
+    ok) printf '%s%s%s' "$g" "$1" "$x" ;;
+    warning | locked | off) printf '%s%s%s' "$y" "$1" "$x" ;;
+    *) printf '%s%s%s' "$r" "$1" "$x" ;;
   esac
-  printf '  %-13s %s%s\033[0m\n' "$k" "$c" "$v"
-done
-echo
+}
+check_line() { printf '  %-15s %s\n' "$1" "$(paint "$(status "$2")")"; }
+ver_line() {
+  local out
+  # shellcheck disable=SC2086
+  out="$($1 2>/dev/null | sed -n '1p')"
+  printf '  %-15s %s\n' "$2" "${out:-missing}"
+}
 
 echo "-- System --"
-sw_vers
-echo "arch: $(uname -m)"
-echo "shell: ${SHELL:-unknown}"
+printf '  %-15s %s\n' "macOS" "$(sw_vers -productVersion 2>/dev/null || echo unknown)"
+printf '  %-15s %s\n' "Apple Silicon" "$([[ "$(uname -m)" == "arm64" ]] && echo yes || echo no)"
+printf '  %-15s %s\n' "Shell" "${SHELL:-unknown}"
 echo
 
-echo "-- Versions --"
-for c in "chezmoi --version" "mise --version" "node --version" "pnpm --version" \
-  "uv --version" "git --version"; do
-  # shellcheck disable=SC2086
-  $c 2>/dev/null | sed -n '1p' || true
-done
+echo "-- Core --"
+check_line "Homebrew" homebrew
+check_line "chezmoi" chezmoi
+check_line "mise" mise
+if command -v gh >/dev/null 2>&1; then gh_stat=ok; else gh_stat=missing; fi
+printf '  %-15s %s\n' "GitHub CLI" "$(paint "$gh_stat")"
 echo
 
-echo "-- mise tools --"
-mise ls 2>/dev/null || echo "mise not active"
+echo "-- Runtimes --"
+ver_line "node --version" "Node"
+ver_line "pnpm --version" "pnpm"
+ver_line "uv --version" "Python / uv"
+echo
+
+echo "-- Security --"
+check_line "1Password" onepassword
+printf '  %-15s %s\n' "Git signing" "$(paint "$(status git_signing)")"
+check_line "Gitleaks hook" gitleaks
 echo
 
 echo "-- chezmoi --"
 if command -v chezmoi >/dev/null 2>&1; then
-  echo "source:  $(chezmoi source-path 2>/dev/null)"
-  echo "profile: $(chezmoi execute-template '{{ .profile }}' 2>/dev/null)"
-  chezmoi verify >/dev/null 2>&1 && echo "state:   clean (live matches source)" ||
-    echo "state:   drift (run 'chezmoi diff')"
+  echo "  source:  $(chezmoi source-path 2>/dev/null)"
+  echo "  profile: $(chezmoi execute-template '{{ .profile }}' 2>/dev/null)"
+  chezmoi verify >/dev/null 2>&1 && echo "  state:   clean (live matches source)" ||
+    echo "  state:   drift (run 'chezmoi diff')"
 fi
+echo
+
+echo "-- Next --"
+printf '  %-22s %s\n' "macstrap cli backend" "Add Supabase, Stripe, Postgres tools"
+printf '  %-22s %s\n' "macstrap apps" "Pick optional GUI apps"

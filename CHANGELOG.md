@@ -23,6 +23,13 @@ All notable changes to macstrap are documented here. The format follows
 - `scripts/check-catalog.sh` (wired into CI): validates catalog rows and fails if
   an optional CLI duplicates a `Brewfile.core` package.
 - ADR 0006: optional CLI catalog (discovery over default install).
+- `macstrap demo [hero|apps|cli|doctor]`: scripted, non-mutating product
+  walkthroughs (installs nothing). Backed by `demo/scripts/`.
+- Demo tooling: VHS `.tape` files in `demo/tapes/`, `demo/record.sh` to
+  regenerate the README GIFs, and `brew/Brewfile.dev` (vhs, shellcheck, shfmt)
+  for contributors. New GIFs `demo-cli.gif` and `demo-doctor.gif`; `demo.gif`
+  and `demo-apps.gif` re-recorded from the scripted walkthroughs.
+- `docs/DEMOS.md` and `demo/README.md` documenting the demo workflow.
 
 ### Changed
 
@@ -31,6 +38,10 @@ All notable changes to macstrap are documented here. The format follows
   or explicit list (`macstrap apps design`) for parity with `macstrap cli`.
 - `starship` moved into `Brewfile.core` (the shipped zsh prompt runs `starship
   init`, so it is a core dependency, not optional).
+- `macstrap doctor` human-readable output regrouped into System / Core / Runtimes
+  / Security / Next for a scannable, screenshot-friendly report (the `--json`
+  contract is unchanged); README leads with a hero walkthrough plus a "See it in
+  action" table of per-topic demos.
 
 ### Fixed
 

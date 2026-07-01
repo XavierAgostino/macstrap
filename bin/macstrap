@@ -30,6 +30,7 @@ Usage:
   macstrap update               pull the latest and apply
   macstrap report               what macstrap manages on this machine
   macstrap security             secrets / signing / auth posture
+  macstrap demo [hero|apps|cli|doctor]   scripted walkthrough (installs nothing)
   macstrap uninstall [--apply]  back out managed dotfiles (dry-run by default)
   macstrap version
   macstrap help
@@ -80,6 +81,18 @@ case "$cmd" in
     fi
     ;;
   cli) bash "$ROOT_DIR/scripts/cli.sh" "$@" ;;
+  demo)
+    case "${1:-hero}" in
+      hero) bash "$ROOT_DIR/demo/scripts/00-hero.sh" ;;
+      apps) bash "$ROOT_DIR/demo/scripts/02-app-picker.sh" ;;
+      cli) bash "$ROOT_DIR/demo/scripts/03-cli-picker.sh" ;;
+      doctor) bash "$ROOT_DIR/demo/scripts/04-doctor.sh" ;;
+      *)
+        echo "usage: macstrap demo [hero|apps|cli|doctor]" >&2
+        exit 2
+        ;;
+    esac
+    ;;
   doctor) bash "$ROOT_DIR/scripts/dev-doctor.sh" "$@" ;;
   report) bash "$ROOT_DIR/scripts/report.sh" ;;
   security) bash "$ROOT_DIR/scripts/security-check.sh" ;;

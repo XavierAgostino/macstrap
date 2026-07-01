@@ -14,12 +14,12 @@ jobs:
       - name: shellcheck
         run: |
           sudo apt-get update -qq && sudo apt-get install -y shellcheck
-          shellcheck -x bin/macstrap scripts/*.sh scripts/lib/*.sh scripts/hooks/pre-commit install.sh
+          shellcheck -x bin/macstrap scripts/*.sh scripts/lib/*.sh demo/scripts/*.sh demo/record.sh scripts/hooks/pre-commit install.sh
       - name: shfmt
         run: |
           curl -fsSL -o /tmp/shfmt https://github.com/mvdan/sh/releases/download/v3.13.1/shfmt_v3.13.1_linux_amd64
           chmod +x /tmp/shfmt
-          /tmp/shfmt -i 2 -ci -d bin/macstrap scripts/*.sh scripts/lib/*.sh scripts/hooks/pre-commit install.sh
+          /tmp/shfmt -i 2 -ci -d bin/macstrap scripts/*.sh scripts/lib/*.sh demo/scripts/*.sh demo/record.sh scripts/hooks/pre-commit install.sh
       - name: catalog hygiene (no core dupes, well-formed rows)
         run: bash scripts/check-catalog.sh
       - name: actionlint
@@ -38,7 +38,7 @@ jobs:
         with:
           node-version: "20"
       - run: npm install -g markdownlint-cli
-      - run: markdownlint README.md CHANGELOG.md "docs/**/*.md" "ai/*.md"
+      - run: markdownlint README.md CHANGELOG.md "docs/**/*.md" "ai/*.md" "demo/**/*.md"
 
   render:
     name: chezmoi render (${{ matrix.profile }})

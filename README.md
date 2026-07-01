@@ -67,6 +67,25 @@ Groups: `deploy` · `backend` · `database` · `cloud` · `kubernetes` · `infra
 `security` · `ai` · `api` · `power-user`. See [`docs/SETUP.md`](docs/SETUP.md) for
 the full catalog.
 
+## See it in action
+
+Every demo is a scripted, non-mutating walkthrough — watch any of them yourself
+with `macstrap demo <name>` (it installs nothing):
+
+| Demo | Shows | Watch |
+| --- | --- | --- |
+| Setup preview | The dry-run plan before macstrap touches your machine | `macstrap demo` |
+| App picker | Choose exactly which GUI apps to install | `macstrap demo apps` |
+| CLI picker | Add project CLIs (Supabase, Stripe, AWS…) on demand | `macstrap demo cli` |
+| Doctor | Verify Homebrew, chezmoi, mise, runtimes, 1Password, signing | `macstrap demo doctor` |
+
+<div align="center">
+<img src=".github/assets/demo-doctor.gif" width="780" alt="macstrap doctor health check"/>
+</div>
+
+> The README GIFs are generated from [`demo/tapes/`](demo/tapes) with VHS, not
+> hand-recorded — see [`docs/DEMOS.md`](docs/DEMOS.md) to regenerate them.
+
 <details>
 <summary><b>Manual setup and advanced env vars</b></summary>
 
