@@ -21,6 +21,22 @@ brand-new Mac is fully configured in minutes.
 
 ---
 
+## How it works
+
+Two paths: **set up a Mac**, or **fork it as your own setup**. Either way the flow is the same:
+
+```text
+install once → pick a profile → dotfiles + runtimes + tools → health check → maintain
+```
+
+1. **Install once** — the one-liner installs Homebrew, clones the repo, and links the `macstrap` CLI onto your PATH.
+2. **Pick a profile** — `personal` or `work`, chosen once at setup. It drives your git identity, commit signing, and which packages install — so you never have to remember to switch your git email later.
+3. **macstrap configures the machine** — previews, then applies your dotfiles ([chezmoi](https://chezmoi.io)), installs runtimes ([mise](https://mise.jdx.dev)) and the core toolchain, adds your chosen apps, then runs a health check. Idempotent and safe to re-run.
+4. **Add optional tools when a project needs them** — `macstrap apps` for GUI apps, `macstrap cli` for project CLIs (Supabase, Stripe, AWS…). CLI picks are recorded, so a fresh Mac replays them.
+5. **Maintain it** — `macstrap doctor` / `diff` / `apply` / `update` / `report` keep it a living environment, not a one-shot script.
+
+Every run is previewable (`--dry-run`), reversible (`macstrap uninstall`), and scriptable (env vars for CI/agents). Your name, email, and keys live in machine-local config — **never committed**.
+
 ## Quick start
 
 One line installs Homebrew, clones the repo, sets everything up, and links the
