@@ -24,8 +24,9 @@ recording and what a user sees when they run `macstrap demo` are the same thing.
 
 The one exception is `tapes/tui.tape`, which records the **real Go TUI**
 (`cmd/macstrap`) navigating its read-only screens — dashboard, Doctor, the app
-picker, Report, Security. It builds the binary to a temp dir, puts it first on
-`PATH`, and never confirms a picker, so it stays non-mutating like the rest.
+picker, Report, Security, and Logs. It builds the binary to a temp dir, puts it
+first on `PATH`, seeds a couple of fake step logs so the Logs screen has content,
+and never confirms a picker, so it stays non-mutating like the rest.
 
 ## Watch locally (no recording)
 
