@@ -73,6 +73,8 @@ catalog_resolve() {
 # Returns non-zero when no interactive picker is available so callers can fall
 # back. Shows "key   description"; returns just the keys.
 #   catalog_pick <catalog-file> <header>
+# gum ships in Brewfile.core; the inline install covers interactive bootstrap,
+# where the picker can run before core packages are installed.
 catalog_pick() {
   command -v gum >/dev/null 2>&1 || brew install gum >/dev/null 2>&1 || true
   if command -v gum >/dev/null 2>&1 && [ -t 0 ]; then

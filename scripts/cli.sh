@@ -100,7 +100,7 @@ esac
 
 # Resolve the selection to a newline list of keys.
 if [[ $# -eq 0 ]]; then
-  selection="$(catalog_pick "$CLI_CATALOG" "Select CLIs to install (space toggles, enter confirms):" || true)"
+  selection="$(catalog_pick "$CLI_CATALOG" "Add project CLIs — space toggles, enter confirms." || true)"
   if [[ -z "$selection" ]]; then
     warn "Nothing selected (no interactive picker, or empty choice)."
     echo "  Browse the catalog:  macstrap cli --list"

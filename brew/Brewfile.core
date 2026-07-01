@@ -21,6 +21,7 @@ brew "fzf"                            # fuzzy finder
 brew "ripgrep"                        # fast grep
 brew "zoxide"                         # smart cd
 brew "jq"                             # JSON processor
+brew "gum"                            # glamorous shell UI (macstrap apps/cli pickers)
 brew "tree"                           # directory trees
 brew "htop"                           # process viewer
 brew "tealdeer"                       # fast tldr (simplified man pages)
