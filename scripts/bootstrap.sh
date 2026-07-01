@@ -89,7 +89,7 @@ resolve_apps() {
     0 | none | minimal) : ;;
     default) catalog_keys "$APPS_CATALOG" default ;;
     interactive)
-      catalog_pick "$APPS_CATALOG" "Select apps to install (space toggles, enter confirms):" || {
+      catalog_pick "$APPS_CATALOG" "Pick the GUI apps you want — space toggles, enter confirms." || {
         warn "No interactive terminal; using the default app set." >&2
         catalog_keys "$APPS_CATALOG" default
       }
@@ -146,8 +146,8 @@ print_plan() {
   printf '  %-15s %s\n' "Runtimes:" "mise install"
   printf '  %-15s %s\n' "Core packages:" "$(grep -cE '^(brew|cask) ' "$DOTFILES_DIR/brew/Brewfile.core" 2>/dev/null || echo '?') from Brewfile.core"
   printf '  %-15s %s\n' "Apps:" "$(apps_count) selected"
-  printf '  %-15s %s\n' "Optional CLIs:" "$([[ -f "$CLI_SELECTED" ]] && echo "$(sed 's/#.*//; /^[[:space:]]*$/d' "$CLI_SELECTED" | grep -c .) recorded (brew/selected.cli)" || echo "none recorded")"
-  printf '  %-15s %s\n' "Profile:" "${PROFILE:-prompt at init}"
+  printf '  %-15s %s\n' "Project CLIs:" "$([[ -f "$CLI_SELECTED" ]] && echo "$(sed 's/#.*//; /^[[:space:]]*$/d' "$CLI_SELECTED" | grep -c .) recorded (brew/selected.cli)" || echo "none yet")"
+  printf '  %-15s %s\n' "Profile:" "${PROFILE:-choose during setup}"
 }
 
 # ---------------------------------------------------------------------------

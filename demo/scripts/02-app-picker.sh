@@ -12,7 +12,7 @@ title "macstrap apps" "Pick exactly the GUI apps you want — the rest stay off"
 nap 0.8
 
 prompt "macstrap apps"
-muted "Select apps to install (space toggles, enter confirms):"
+muted "Pick the GUI apps you want — space toggles, enter confirms."
 printf '  %s◉%s cursor            AI-native editor\n' "$D_G" "$D_X"
 printf '  %s◉%s claude-code       terminal AI coding agent\n' "$D_G" "$D_X"
 printf '  %s◉%s ghostty           GPU-accelerated terminal\n' "$D_G" "$D_X"
@@ -32,5 +32,5 @@ row_ok "orbstack"
 nap 1
 
 muted ""
-muted "Tip: macstrap apps design   installs a whole group by name."
+muted "Tip: use  macstrap apps design  to install a curated group."
 nap 1
