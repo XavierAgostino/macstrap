@@ -3,7 +3,7 @@
 # Regenerate macstrap demo GIFs from the .tape files with VHS.
 #
 #   ./demo/record.sh            record all tapes
-#   ./demo/record.sh hero       record a single demo (hero|apps|cli|doctor)
+#   ./demo/record.sh hero       record a single demo (hero|apps|cli|doctor|tui)
 #
 # Requires VHS:  brew bundle --file=brew/Brewfile.dev
 # The tapes drive the scripted, non-mutating walkthroughs in demo/scripts/ and
@@ -30,7 +30,7 @@ record() {
 }
 
 if [[ $# -eq 0 || "${1:-}" == "all" ]]; then
-  for t in hero apps cli doctor; do record "$t"; done
+  for t in hero apps cli doctor tui; do record "$t"; done
 else
   for t in "$@"; do record "$t"; done
 fi

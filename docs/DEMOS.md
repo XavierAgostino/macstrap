@@ -22,6 +22,11 @@ demo/
 Each tape drives a script through [`macstrap demo`](../demo/README.md), so the
 recording and what a user sees when they run `macstrap demo` are the same thing.
 
+The one exception is `tapes/tui.tape`, which records the **real Go TUI**
+(`cmd/macstrap`) navigating its read-only screens — dashboard, Doctor, the app
+picker, Report, Security. It builds the binary to a temp dir, puts it first on
+`PATH`, and never confirms a picker, so it stays non-mutating like the rest.
+
 ## Watch locally (no recording)
 
 ```bash
@@ -41,8 +46,8 @@ DEMO_SPEED=0 macstrap demo hero
 
 ```bash
 brew bundle --file=brew/Brewfile.dev   # installs vhs, shellcheck, shfmt
-./demo/record.sh                       # all four GIFs -> .github/assets/
-./demo/record.sh hero                  # just one
+./demo/record.sh                       # all GIFs -> .github/assets/
+./demo/record.sh hero                  # just one (hero|apps|cli|doctor|tui)
 ```
 
 Real, full install logs (`Downloading… Pouring… Already installed…`) belong in

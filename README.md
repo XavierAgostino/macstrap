@@ -71,6 +71,10 @@ macstrap            # interactive dashboard (TUI)
 macstrap doctor     # same engine, scriptable — add --json for machines
 ```
 
+<div align="center">
+<img src=".github/assets/demo-tui.gif" width="780" alt="macstrap interactive TUI — dashboard, doctor, app picker, report, security"/>
+</div>
+
 The TUI never reimplements setup: every screen renders the engine's
 [versioned JSON](docs/JSON-CONTRACTS.md) and hands the real work back to the
 scripts, so the CLI stays the scriptable, CI-friendly source of truth. It ships

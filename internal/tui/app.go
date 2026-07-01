@@ -306,7 +306,7 @@ func (m model) View() string {
 	case screenCLI:
 		return m.frame("CLI", m.viewPicker())
 	default:
-		return m.frame("macstrap", m.viewDashboard())
+		return m.frame("your macOS dev setup", m.viewDashboard())
 	}
 }
 
