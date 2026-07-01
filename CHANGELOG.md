@@ -6,19 +6,24 @@ All notable changes to macstrap are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-06-30
+
 ### Added
 
+- `docs/COLORS.md`: a documented, semantic Vesper color language applied
+  consistently across Starship, fzf, and the terminal palette.
 - Architecture Decision Records under `docs/adr/` (chezmoi, mise, profiles,
   1Password, split Brewfiles).
-- `docs/COLORS.md`: a semantic Vesper color language, applied consistently across
-  Starship, fzf, and the terminal palette.
 
 ### Changed
 
-- Starship colors are now semantic (branch = pink, git status = dimmed lavender,
-  duration = muted); fzf themed to Vesper.
+- Semantic Starship colors: path leads (lavender), git context recedes (muted
+  branch, dimmed status), and the prompt is the one pink accent. fzf themed to
+  Vesper.
 - Ghostty default is opaque with no blur for readability; translucency and blur
   are an opt-in "aesthetic mode".
+- Demos re-recorded as a floating macOS window (traffic lights, rounded corners,
+  soft backdrop) with the new colors.
 
 ## [0.4.0] - 2026-06-30
 
@@ -85,7 +90,8 @@ All notable changes to macstrap are documented here. The format follows
   macOS defaults script, CI (shellcheck + chezmoi render + Brewfile parse), and
   documentation.
 
-[Unreleased]: https://github.com/XavierAgostino/macstrap/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/XavierAgostino/macstrap/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/XavierAgostino/macstrap/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/XavierAgostino/macstrap/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/XavierAgostino/macstrap/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/XavierAgostino/macstrap/compare/v0.1.0...v0.2.0
