@@ -8,12 +8,23 @@ All notable changes to macstrap are documented here. The format follows
 
 ### Planned
 - Expand `dev-doctor --fix` with more safe repairs.
-- CI matrix across profiles (personal/work) and app modes, plus `shfmt`,
-  `actionlint`, and `markdownlint`.
-- `scripts/report.sh` ("what did macstrap change?") and a conservative
-  `scripts/uninstall.sh` (dry-run and dotfiles-only).
+- `shfmt`, `actionlint`, and `markdownlint` in CI.
 - ADR files under `docs/adr/`.
-- `scripts/security-check.sh` (gitleaks, signing, `op`/`gh` auth status).
+
+## [0.2.0] - 2026-06-30
+
+### Added
+- `scripts/report.sh`: show what macstrap manages on this machine (read-only).
+- `scripts/uninstall.sh`: conservative back-out of managed dotfiles, dry-run by
+  default, with backups on `--apply`. Never touches Homebrew, 1Password, or data.
+- `scripts/security-check.sh`: gitleaks, commit signing, hook, and `op`/`gh`
+  posture at a glance.
+- Interactive app-picker demo GIF (Vesper theme).
+- CI matrix across `personal` and `work` profiles; `install.sh` added to shellcheck.
+
+### Changed
+- Resolve the app selection exactly once, so the interactive picker renders
+  correctly during planning and the same choice drives the install.
 
 ## [0.1.0] - 2026-06-30
 
@@ -33,5 +44,6 @@ All notable changes to macstrap are documented here. The format follows
   macOS defaults script, CI (shellcheck + chezmoi render + Brewfile parse), and
   documentation.
 
-[Unreleased]: https://github.com/XavierAgostino/macstrap/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/XavierAgostino/macstrap/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/XavierAgostino/macstrap/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/XavierAgostino/macstrap/releases/tag/v0.1.0

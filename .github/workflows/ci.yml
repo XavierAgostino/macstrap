@@ -14,21 +14,24 @@ jobs:
       - name: Install shellcheck
         run: sudo apt-get update && sudo apt-get install -y shellcheck
       - name: Lint
-        run: shellcheck scripts/*.sh scripts/hooks/pre-commit
+        run: shellcheck scripts/*.sh scripts/hooks/pre-commit install.sh
 
-  chezmoi:
-    name: chezmoi render + Brewfile parse
+  render:
+    name: chezmoi render (${{ matrix.profile }})
     runs-on: macos-latest
+    strategy:
+      matrix:
+        profile: [personal, work]
     steps:
       - uses: actions/checkout@v4
       - name: Install chezmoi
         run: brew install chezmoi
-      - name: Seed test config (no interactive prompts) and dry-run apply
+      - name: Seed ${{ matrix.profile }} config and dry-run apply
         run: |
           mkdir -p ~/.config/chezmoi
-          cat > ~/.config/chezmoi/chezmoi.toml <<'EOF'
+          cat > ~/.config/chezmoi/chezmoi.toml <<EOF
           [data]
-              profile = "personal"
+              profile = "${{ matrix.profile }}"
               name = "CI User"
               email = "ci@example.com"
               githubUser = "ci"

@@ -165,6 +165,20 @@ configures a personal laptop and a locked-down work machine correctly. See
 > Your name, email, and signing key are **never committed**: they live in
 > machine-local chezmoi config, so a fork is generic by default.
 
+## Maintenance and safety
+
+Every action is previewable and reversible:
+
+```bash
+bash scripts/report.sh          # what macstrap manages on this machine
+bash scripts/security-check.sh  # secrets, signing, hook, op/gh posture
+bash scripts/dev-doctor.sh --json   # machine-readable health
+bash scripts/uninstall.sh       # dry-run back-out of managed dotfiles (--apply to perform)
+```
+
+`uninstall.sh` backs up every file before removing it and never touches Homebrew
+packages, 1Password, runtimes, or your data.
+
 ## Why it's built this way
 
 See [`docs/DECISIONS.md`](docs/DECISIONS.md) for short notes on why chezmoi over
