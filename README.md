@@ -60,6 +60,12 @@ bash ~/Developer/workspaces/macstrap/scripts/bootstrap.sh
 Fine-grained: `PROFILE=work APPS=cursor,orbstack,tableplus bash scripts/bootstrap.sh`.
 See [`docs/AGENT-USAGE.md`](docs/AGENT-USAGE.md) for automation.
 
+`MODE=interactive` lets you pick exactly what to install:
+
+<div align="center">
+<img src=".github/assets/demo-apps.gif" width="780" alt="macstrap interactive app picker"/>
+</div>
+
 ## What you get
 
 - **Modern shell**: zsh with the [Starship](https://starship.rs) prompt,
