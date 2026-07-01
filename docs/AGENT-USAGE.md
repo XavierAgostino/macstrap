@@ -4,6 +4,10 @@ Guidance for AI agents and automation driving macstrap. Everything here is
 scriptable and non-interactive, and every action is either a preview or a
 declarative apply.
 
+The `macstrap` CLI wraps these (`macstrap install --dry-run`,
+`macstrap doctor --json`, `macstrap install --headless`). Agents may use either
+the CLI or the env vars below; the env vars are the low-level interface.
+
 ## Safe commands
 
 ```bash

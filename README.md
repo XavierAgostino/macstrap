@@ -23,48 +23,57 @@ brand-new Mac is fully configured in minutes.
 
 ## Quick start
 
-One line (installs Homebrew, clones the repo, runs the installer):
+One line installs Homebrew, clones the repo, sets everything up, and links the
+`macstrap` command onto your PATH:
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/XavierAgostino/macstrap/main/install.sh)"
 ```
 
-Or step by step:
+Open a new terminal, and you have the `macstrap` CLI:
 
 ```bash
-# 1. Homebrew (also installs git via Xcode CLT)
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
-# 2. Clone and bootstrap (asks: personal or work?)
-git clone https://github.com/XavierAgostino/macstrap.git ~/Developer/workspaces/macstrap
-bash ~/Developer/workspaces/macstrap/scripts/bootstrap.sh
-
-# 3. Open a new terminal (or run: exec zsh)
+macstrap install              # default stack (asks: personal or work?)
+macstrap install --minimal    # shell, git, chezmoi, mise, CLI core only
+macstrap install --work --apps
+macstrap doctor               # health check
+macstrap apps                 # pick GUI apps interactively
+macstrap update               # pull the latest and apply
+macstrap diff                 # preview pending changes
 ```
 
 > [!TIP]
-> The installer is idempotent (safe to re-run). Preview any run with `DRY_RUN=1`.
+> Preview any run without touching your machine: `macstrap install --dry-run`.
+> Run `macstrap help` for the full command list.
 
-### Install modes
-
-| Command | What it does |
-|---|---|
-| `bash scripts/bootstrap.sh` | Default stack: CLI core, tools, and the default apps |
-| `MODE=minimal bash scripts/bootstrap.sh` | Shell, git, chezmoi, mise, CLI core only |
-| `MODE=interactive bash scripts/bootstrap.sh` | Pick your apps from a menu |
-| `MODE=headless bash scripts/bootstrap.sh` | Core only, no GUI apps (CI / remote Macs) |
-| `DRY_RUN=1 bash scripts/bootstrap.sh` | Preview the plan, change nothing |
-| `bash scripts/dev-doctor.sh --json` | Machine-readable health (agents / CI) |
-
-Fine-grained: `PROFILE=work APPS=cursor,orbstack,tableplus bash scripts/bootstrap.sh`.
-See [`docs/AGENT-USAGE.md`](docs/AGENT-USAGE.md) for automation.
-
-`MODE=interactive` lets you pick exactly what to install:
+`macstrap apps` (and `macstrap install --apps`) let you pick exactly what to install:
 
 <div align="center">
 <img src=".github/assets/demo-apps.gif" width="780" alt="macstrap interactive app picker"/>
 </div>
+
+<details>
+<summary><b>Manual setup and advanced env vars</b></summary>
+
+Prefer to see each step, or automating without the CLI:
+
+```bash
+# Homebrew (also installs git via Xcode CLT)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Clone and bootstrap
+git clone https://github.com/XavierAgostino/macstrap.git ~/Developer/workspaces/macstrap
+bash ~/Developer/workspaces/macstrap/scripts/bootstrap.sh
+```
+
+The CLI just sets env vars, which agents and CI can pass directly:
+`MODE=minimal|default|interactive|headless|doctor`, `PROFILE=personal|work`,
+`APPS=0|default|interactive|a,b,c`, `DRY_RUN=1`. For example
+`PROFILE=work APPS=cursor,orbstack,tableplus bash scripts/bootstrap.sh`.
+See [`docs/AGENT-USAGE.md`](docs/AGENT-USAGE.md).
+
+</details>
 
 ## What you get
 
@@ -132,13 +141,14 @@ See [`docs/AGENT-USAGE.md`](docs/AGENT-USAGE.md) for automation.
 
 ```
 macstrap/
+├── bin/macstrap                  # the CLI (symlinked to ~/.local/bin)
 ├── private_dot_zshrc.tmpl        # -> ~/.zshrc       (chezmoi templates)
 ├── dot_config/                   # -> ~/.config/*    (starship, ghostty, mise, zsh, git)
 ├── dot_gitconfig.tmpl            # -> ~/.gitconfig   (identity from profile)
-├── brew/Brewfile.{core,apps,personal,work}
-├── scripts/                      # bootstrap, doctor, macos-defaults, git hooks
+├── brew/Brewfile.{core,apps,personal,work} + apps.catalog
+├── scripts/                      # bootstrap, doctor, report, uninstall, security, hooks
 ├── ai/                           # AI assistant config (Claude / Codex / Cursor)
-├── docs/                         # setup, decisions, troubleshooting, work/personal
+├── docs/                         # setup, decisions, troubleshooting, work/personal, agents
 └── .github/workflows/ci.yml
 ```
 
@@ -170,10 +180,10 @@ configures a personal laptop and a locked-down work machine correctly. See
 Every action is previewable and reversible:
 
 ```bash
-bash scripts/report.sh          # what macstrap manages on this machine
-bash scripts/security-check.sh  # secrets, signing, hook, op/gh posture
-bash scripts/dev-doctor.sh --json   # machine-readable health
-bash scripts/uninstall.sh       # dry-run back-out of managed dotfiles (--apply to perform)
+macstrap report        # what macstrap manages on this machine
+macstrap security      # secrets, signing, hook, op/gh posture
+macstrap doctor --json # machine-readable health
+macstrap uninstall     # dry-run back-out of managed dotfiles (--apply to perform)
 ```
 
 `uninstall.sh` backs up every file before removing it and never touches Homebrew

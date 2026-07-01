@@ -18,7 +18,7 @@ Type "cd ~/Developer/workspaces/macstrap && clear" Enter
 Show
 Sleep 800ms
 
-Type "MODE=interactive DRY_RUN=1 bash scripts/bootstrap.sh" Sleep 400ms Enter
+Type "macstrap install --apps --dry-run" Sleep 400ms Enter
 Sleep 1600ms
 
 Space Sleep 500ms

@@ -21,8 +21,8 @@ Sleep 900ms
 Type "eza --icons --git" Sleep 400ms Enter
 Sleep 2200ms
 
-Type "DRY_RUN=1 bash scripts/bootstrap.sh" Sleep 400ms Enter
+Type "macstrap install --dry-run" Sleep 400ms Enter
 Sleep 3200ms
 
-Type "bash scripts/dev-doctor.sh --json | jq" Sleep 400ms Enter
+Type "macstrap doctor --json | jq" Sleep 400ms Enter
 Sleep 3200ms

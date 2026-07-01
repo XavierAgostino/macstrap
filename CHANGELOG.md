@@ -11,6 +11,19 @@ All notable changes to macstrap are documented here. The format follows
 - `shfmt`, `actionlint`, and `markdownlint` in CI.
 - ADR files under `docs/adr/`.
 
+## [0.3.0] - 2026-06-30
+
+### Added
+- `bin/macstrap` CLI: `install`, `apps`, `doctor`, `diff`, `apply`, `update`,
+  `report`, `security`, `uninstall`, `version`, `help`. Friendly flags
+  (`--minimal`, `--headless`, `--work`, `--personal`, `--apps`, `--no-apps`,
+  `--dry-run`) are the primary UX; env vars remain the low-level interface.
+- The bootstrap links the CLI to `~/.local/bin/macstrap`.
+
+### Changed
+- README leads with the `macstrap` CLI; raw env-var usage moved to an
+  "Advanced" section. Demos re-recorded to use the CLI.
+
 ## [0.2.0] - 2026-06-30
 
 ### Added
@@ -44,6 +57,7 @@ All notable changes to macstrap are documented here. The format follows
   macOS defaults script, CI (shellcheck + chezmoi render + Brewfile parse), and
   documentation.
 
-[Unreleased]: https://github.com/XavierAgostino/macstrap/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/XavierAgostino/macstrap/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/XavierAgostino/macstrap/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/XavierAgostino/macstrap/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/XavierAgostino/macstrap/releases/tag/v0.1.0

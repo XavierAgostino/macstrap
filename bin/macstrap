@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+#
+# macstrap CLI. Friendly commands over the underlying scripts.
+# Advanced users and agents can still use the env vars directly (see docs).
+#
+set -euo pipefail
+
+# Resolve this script's real location (it is usually symlinked onto PATH).
+_src="${BASH_SOURCE[0]}"
+while [ -L "$_src" ]; do
+  _dir="$(cd -P "$(dirname "$_src")" && pwd)"
+  _src="$(readlink "$_src")"
+  [[ "$_src" != /* ]] && _src="$_dir/$_src"
+done
+ROOT_DIR="$(cd -P "$(dirname "$_src")/.." && pwd)"
+export DOTFILES_DIR="$ROOT_DIR"
+
+usage() {
+  cat <<'EOF'
+macstrap: reproducible macOS developer setup
+
+Usage:
+  macstrap install [--minimal|--headless] [--work|--personal]
+                   [--apps|--no-apps] [--dry-run]
+  macstrap apps                 pick and install GUI apps interactively
+  macstrap doctor [--json|--fix]
+  macstrap diff                 preview pending dotfile changes
+  macstrap apply                apply dotfile changes
+  macstrap update               pull the latest and apply
+  macstrap report               what macstrap manages on this machine
+  macstrap security             secrets / signing / auth posture
+  macstrap uninstall [--apply]  back out managed dotfiles (dry-run by default)
+  macstrap version
+  macstrap help
+
+Examples:
+  macstrap install
+  macstrap install --minimal
+  macstrap install --work --apps
+  macstrap doctor --fix
+EOF
+}
+
+boot() { bash "$ROOT_DIR/scripts/bootstrap.sh"; }
+
+cmd="${1:-help}"; shift || true
+case "$cmd" in
+  install)
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        --minimal)          export MODE="minimal" ;;
+        --headless)         export MODE="headless" ;;
+        --default)          export MODE="default" ;;
+        --work)             export PROFILE="work" ;;
+        --personal)         export PROFILE="personal" ;;
+        --apps|--interactive) export APPS="interactive" ;;
+        --no-apps)          export APPS="0" ;;
+        --dry-run|-n)       export DRY_RUN="1" ;;
+        *) echo "Unknown option: $1 (run: macstrap help)" >&2; exit 1 ;;
+      esac
+      shift
+    done
+    boot
+    ;;
+  apps)     APPS="interactive" boot ;;
+  doctor)   bash "$ROOT_DIR/scripts/dev-doctor.sh" "$@" ;;
+  report)   bash "$ROOT_DIR/scripts/report.sh" ;;
+  security) bash "$ROOT_DIR/scripts/security-check.sh" ;;
+  uninstall) bash "$ROOT_DIR/scripts/uninstall.sh" "$@" ;;
+  diff)     chezmoi diff "$@" ;;
+  apply)    chezmoi apply "$@" ;;
+  update)   git -C "$ROOT_DIR" pull --ff-only && chezmoi apply ;;
+  version|--version|-v) git -C "$ROOT_DIR" describe --tags 2>/dev/null || echo "dev" ;;
+  help|--help|-h) usage ;;
+  *) echo "Unknown command: $cmd (run: macstrap help)" >&2; exit 1 ;;
+esac

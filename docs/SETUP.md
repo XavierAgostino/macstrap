@@ -61,10 +61,14 @@ Run `exec zsh`, or open a new Ghostty window, to load the new shell.
 
 ## 5. Verify
 
+The bootstrap links the `macstrap` CLI onto your PATH, so after opening a new
+terminal:
+
 ```bash
-doctor          # or: bash scripts/dev-doctor.sh
-chezmoi verify  # exits 0 when $HOME matches the source
+macstrap doctor   # health check
+macstrap report   # what macstrap manages
+chezmoi verify    # exits 0 when $HOME matches the source
 ```
 
-`dev-doctor` should report chezmoi state clean, mise listing Node, and tools
+`macstrap doctor` should report chezmoi state clean, mise listing Node, and tools
 resolving to Homebrew and mise paths.

@@ -51,6 +51,9 @@ run_required() { local d="$1"; shift; if "$@"; then ok "$d"; else die "$d"; fi; 
 # run an OPTIONAL step; record a warning and continue on failure
 run_optional() { local d="$1"; shift; if "$@"; then ok "$d"; else warn "$d (continued)"; WARNINGS+=("$d"); fi; }
 
+# link the `macstrap` CLI onto PATH (~/.local/bin is added to PATH in .zprofile)
+link_cli() { mkdir -p "$HOME/.local/bin" && ln -sf "$DOTFILES_DIR/bin/macstrap" "$HOME/.local/bin/macstrap"; }
+
 # --- catalog helpers ---
 catalog_by_tag()  { awk -F'|' -v t="$1" '!/^#/ && NF>=3 { n=split($3,a,","); for(i=1;i<=n;i++) if(a[i]==t) print $1 }' "$CATALOG"; }
 catalog_tokens()  { awk -F'|' '!/^#/ && NF>=1 && $1!="" { print $1 }' "$CATALOG"; }
@@ -128,6 +131,7 @@ command -v brew >/dev/null 2>&1 || \
 # 3. chezmoi + secret-scan hook
 command -v chezmoi >/dev/null 2>&1 || run_required "Installing chezmoi" brew install chezmoi
 run_optional "Enabling the gitleaks pre-commit hook" git -C "$DOTFILES_DIR" config core.hooksPath scripts/hooks
+run_optional "Linking the macstrap CLI (~/.local/bin/macstrap)" link_cli
 
 # 4. chezmoi init + apply
 run_required "chezmoi init" chezmoi init --source="$DOTFILES_DIR"
