@@ -21,6 +21,7 @@ const (
 	screenSecurity
 	screenApps
 	screenCLI
+	screenLogs
 )
 
 // menuItem is one action on the dashboard.
@@ -36,6 +37,7 @@ var menu = []menuItem{
 	{"cli", "CLI", "Pick optional developer CLIs"},
 	{"report", "Report", "See what macstrap manages"},
 	{"security", "Security", "Review your security posture"},
+	{"logs", "Logs", "Browse logs from the last run"},
 	{"install", "Install", "Run the full setup (dry-run first)"},
 }
 
@@ -51,7 +53,8 @@ type model struct {
 	report   *engine.Report
 	doctor   *engine.Doctor
 	security *engine.Security
-	pk       *picker // active app/cli multi-select, nil otherwise
+	pk       *picker   // active app/cli multi-select, nil otherwise
+	lv       *logsView // active logs browser, nil otherwise
 
 	loading bool
 	err     error
@@ -77,6 +80,7 @@ type catalogMsg struct {
 	kind string
 	c    *engine.Catalog
 }
+type logsMsg struct{ entries []engine.LogEntry }
 type errMsg struct{ err error }
 
 func (e errMsg) Error() string { return e.err.Error() }
@@ -139,6 +143,19 @@ func loadCatalog(eng *engine.Engine, kind string) tea.Cmd {
 	}
 }
 
+// loadLogs lists the captured step logs from the last quiet-mode run. It reads
+// the filesystem directly (not a shell contract) but resolves the log dir the
+// same way scripts/lib/ui.sh does, via engine.LogDir.
+func loadLogs(eng *engine.Engine) tea.Cmd {
+	return func() tea.Msg {
+		entries, err := eng.Logs()
+		if err != nil {
+			return errMsg{err}
+		}
+		return logsMsg{entries}
+	}
+}
+
 // runShell suspends the TUI and hands control to the bash entrypoint. This is
 // how the app defers real work (install, app/cli install) to the scripts.
 func runShell(eng *engine.Engine, args ...string) tea.Cmd {
@@ -159,6 +176,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		m.width, m.height = msg.Width, msg.Height
+		if m.lv != nil {
+			m.lv.setHeight(m.height)
+		}
 		return m, nil
 
 	case reportMsg:
@@ -175,6 +195,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 	case catalogMsg:
 		m.pk = newPicker(msg.kind, msg.c)
+		m.loading = false
+		return m, nil
+	case logsMsg:
+		m.lv = newLogsView(msg.entries)
+		m.lv.setHeight(m.height)
 		m.loading = false
 		return m, nil
 	case reloadMsg:
@@ -203,6 +228,11 @@ func (m model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	// Picker screens have their own keymap (space toggles, enter installs).
 	if (m.screen == screenApps || m.screen == screenCLI) && m.pk != nil {
 		return m.handlePickerKey(msg)
+	}
+
+	// Logs has a list/pager keymap of its own.
+	if m.screen == screenLogs {
+		return m.handleLogsKey(msg)
 	}
 
 	if m.screen != screenDashboard {
@@ -259,6 +289,11 @@ func (m model) activate(key string) (tea.Model, tea.Cmd) {
 		m.pk = nil
 		m.loading = true
 		return m, loadCatalog(m.eng, "cli")
+	case "logs":
+		m.screen = screenLogs
+		m.lv = nil
+		m.loading = true
+		return m, loadLogs(m.eng)
 	case "install":
 		return m, runShell(m.eng, "install", "--dry-run")
 	}
@@ -291,6 +326,47 @@ func (m model) handlePickerKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
+// handleLogsKey drives the logs browser: the list picks a log, the pager
+// scrolls it. esc backs out one level (pager → list → dashboard).
+func (m model) handleLogsKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
+	back := func() (tea.Model, tea.Cmd) {
+		if m.lv != nil && m.lv.open {
+			m.lv.close()
+			return m, nil
+		}
+		m.screen = screenDashboard
+		m.lv = nil
+		m.err = nil
+		return m, nil
+	}
+	switch msg.String() {
+	case "esc", "backspace", "left", "h", "q":
+		return back()
+	}
+	if m.lv == nil { // still loading
+		return m, nil
+	}
+	switch msg.String() {
+	case "up", "k":
+		m.lv.up()
+	case "down", "j":
+		m.lv.down()
+	case "enter", "right", "l":
+		if !m.lv.open {
+			if e := m.lv.selected(); e != nil {
+				content, err := m.eng.ReadLog(e.Path)
+				if err != nil {
+					m.err = err
+					return m, nil
+				}
+				m.lv.setHeight(m.height)
+				m.lv.openContent(e.Name, content)
+			}
+		}
+	}
+	return m, nil
+}
+
 // --- view ---
 
 func (m model) View() string {
@@ -305,6 +381,8 @@ func (m model) View() string {
 		return m.frame("Apps", m.viewPicker())
 	case screenCLI:
 		return m.frame("CLI", m.viewPicker())
+	case screenLogs:
+		return m.frame("Logs", m.viewLogs())
 	default:
 		return m.frame("your macOS dev setup", m.viewDashboard())
 	}
@@ -317,6 +395,13 @@ func (m model) viewPicker() string {
 	return m.pk.view()
 }
 
+func (m model) viewLogs() string {
+	if m.loading || m.lv == nil {
+		return styleSubtle.Render("finding logs…")
+	}
+	return m.lv.view()
+}
+
 // frame wraps body content with a title header and a help footer.
 func (m model) frame(title, body string) string {
 	head := styleTitle.Render("macstrap") + styleSubtle.Render("  ·  "+title)
@@ -326,6 +411,12 @@ func (m model) frame(title, body string) string {
 		help = styleHelp.Render("↑/↓ move · enter select · q quit")
 	case screenApps, screenCLI:
 		help = styleHelp.Render("↑/↓ move · space toggle · enter install · d preview · esc back")
+	case screenLogs:
+		if m.lv != nil && m.lv.open {
+			help = styleHelp.Render("↑/↓ scroll · esc back to list")
+		} else {
+			help = styleHelp.Render("↑/↓ move · enter view · esc back")
+		}
 	default:
 		help = styleHelp.Render("esc back · ctrl+c quit")
 	}

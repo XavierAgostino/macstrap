@@ -63,16 +63,17 @@ macstrap diff                 # preview pending changes
 
 Run `macstrap` with no arguments to open the interactive TUI — a dashboard over
 the same engine. Run **Doctor**, browse and install **Apps** / **CLI** with a
-multi-select, and review your **Report** and **Security** posture without
-memorizing flags:
+multi-select, review your **Report** and **Security** posture, and browse the
+**Logs** from your last run — all without memorizing flags:
 
 ```bash
 macstrap            # interactive dashboard (TUI)
 macstrap doctor     # same engine, scriptable — add --json for machines
+macstrap logs       # list captured step logs; `macstrap logs <name>` prints one
 ```
 
 <div align="center">
-<img src=".github/assets/demo-tui.gif" width="780" alt="macstrap interactive TUI — dashboard, doctor, app picker, report, security"/>
+<img src=".github/assets/demo-tui.gif" width="780" alt="macstrap interactive TUI — dashboard, doctor, app picker, report, security, logs"/>
 </div>
 
 The TUI never reimplements setup: every screen renders the engine's

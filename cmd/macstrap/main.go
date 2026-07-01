@@ -6,7 +6,9 @@
 // etc. behave identically whether a human or a script invokes them.
 //
 // The Go layer never reimplements setup logic; it renders (TUI) or delegates
-// (CLI). See docs/JSON-CONTRACTS.md for the engine/UI seam.
+// (CLI). The one Go-native subcommand is `logs`, which reads the step-log files
+// the engine writes — a filesystem artifact, not setup logic. See
+// docs/JSON-CONTRACTS.md for the engine/UI seam.
 package main
 
 import (
@@ -38,6 +40,11 @@ func main() {
 			os.Exit(1)
 		}
 		return
+	}
+
+	// Logs are Go-native (filesystem artifacts the engine owns), not delegated.
+	if args[0] == "logs" {
+		os.Exit(handleLogs(eng, args[1:]))
 	}
 
 	// Scriptable path: delegate verbatim to the shell engine and mirror its

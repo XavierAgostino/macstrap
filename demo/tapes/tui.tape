@@ -1,11 +1,13 @@
 # macstrap TUI demo — regenerate with:  vhs demo/tapes/tui.tape
 #
 # Records the REAL Bubble Tea TUI (cmd/macstrap) navigating its read-only
-# screens — dashboard, Doctor, the app picker, Report, Security. Non-mutating:
-# it never presses enter on a picker, so nothing is ever installed.
+# screens — dashboard, Doctor, the app picker, Report, Security, Logs.
+# Non-mutating: it never presses enter on a picker, so nothing is ever installed.
 #
 # The Hide block builds the binary to a temp dir and puts it first on PATH, so
-# `macstrap` resolves to the Go TUI (not the bash bin/macstrap fallback).
+# `macstrap` resolves to the Go TUI (not the bash bin/macstrap fallback). It also
+# seeds a couple of fake step logs into UI_LOG_DIR so the Logs screen has content
+# (a fresh clone has none yet).
 
 Output .github/assets/demo-tui.gif
 
@@ -21,6 +23,9 @@ Type "export MACSTRAP_DIR=$PWD DOTFILES_DIR=$PWD" Enter
 Type "mkdir -p /tmp/macstrap-demo && go build -o /tmp/macstrap-demo/macstrap ./cmd/macstrap" Enter
 Sleep 10s
 Type "export PATH=/tmp/macstrap-demo:/opt/homebrew/bin:$PATH" Enter
+Type "export UI_LOG_DIR=/tmp/macstrap-demo-logs && mkdir -p $UI_LOG_DIR" Enter
+Type "printf 'Warning: Treating cursor as a cask.\n==> Downloading cursor\n==> Installing Cask cursor\ncursor was successfully installed!\n' > $UI_LOG_DIR/install-homebrew-casks.log" Enter
+Type "printf 'Cloning dotfiles…\nApplying chezmoi state\nDone.\n' > $UI_LOG_DIR/apply-dotfiles.log" Enter
 Ctrl+L
 Show
 
@@ -60,6 +65,17 @@ Enter
 Sleep 4s
 Escape
 Sleep 1s
+
+# Logs — browse the captured step logs, open one, then back out.
+Down
+Enter
+Sleep 2s
+Enter
+Sleep 2500ms
+Escape
+Sleep 1s
+Escape
+Sleep 800ms
 
 # Quit.
 Type "q"
