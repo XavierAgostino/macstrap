@@ -11,6 +11,8 @@ set -euo pipefail
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/Developer/workspaces/macstrap}"
 # Resolve mise-managed runtimes (node, etc.) even in this non-interactive shell.
 [[ -d "$HOME/.local/share/mise/shims" ]] && export PATH="$HOME/.local/share/mise/shims:$PATH"
+# shellcheck source=scripts/lib/json.sh
+. "$DOTFILES_DIR/scripts/lib/json.sh"
 
 # --- structured checks: emit "key<TAB>status" lines ---
 run_checks() {
@@ -21,6 +23,7 @@ run_checks() {
     printf 'chezmoi\tok\n'
   else printf 'chezmoi\twarning\n'; fi
   command -v mise >/dev/null 2>&1 && printf 'mise\tok\n' || printf 'mise\tmissing\n'
+  command -v gh >/dev/null 2>&1 && printf 'github\tok\n' || printf 'github\tmissing\n'
   command -v node >/dev/null 2>&1 && printf 'node\tok\n' || printf 'node\tmissing\n'
   [[ "$(git config --global commit.gpgsign 2>/dev/null || true)" == "true" ]] &&
     printf 'git_signing\tok\n' || printf 'git_signing\toff\n'
@@ -32,8 +35,68 @@ run_checks() {
   command -v gitleaks >/dev/null 2>&1 && printf 'gitleaks\tok\n' || printf 'gitleaks\tmissing\n'
 }
 
+# Normalize a raw status into a level the TUI can color: ok | warn | error.
+level_of() {
+  case "$1" in
+    ok) echo ok ;;
+    warning | locked | off) echo warn ;;
+    *) echo error ;; # missing / unknown
+  esac
+}
+# Presentation + advisory metadata for each check key.
+meta_group() {
+  case "$1" in
+    homebrew | chezmoi | mise | github) echo Core ;;
+    node) echo Runtimes ;;
+    git_signing | onepassword | gitleaks) echo Security ;;
+    *) echo Other ;;
+  esac
+}
+meta_label() {
+  case "$1" in
+    homebrew) echo Homebrew ;;
+    chezmoi) echo "Dotfiles (chezmoi)" ;;
+    mise) echo "Runtimes (mise)" ;;
+    github) echo "GitHub CLI" ;;
+    node) echo Node ;;
+    git_signing) echo "Git signing" ;;
+    onepassword) echo 1Password ;;
+    gitleaks) echo "Gitleaks hook" ;;
+    *) echo "$1" ;;
+  esac
+}
+# A next step when a check is not ok; empty otherwise.
+meta_hint() {
+  case "$1:$2" in
+    git_signing:off) echo "Enable commit signing — see docs/work-separation.md" ;;
+    onepassword:locked) echo "Unlock 1Password: op signin" ;;
+    onepassword:missing) echo "Install the 1Password CLI: brew install --cask 1password-cli" ;;
+    gitleaks:missing) echo "Install gitleaks: brew install gitleaks" ;;
+    *:missing) echo "Install $1" ;;
+    *) echo "" ;;
+  esac
+}
+
+# macstrap.doctor/v1 — see docs/JSON-CONTRACTS.md.
 emit_json() {
-  run_checks | awk -F'\t' 'BEGIN{print "{"} {printf "%s  \"%s\": \"%s\"", (NR>1?",\n":""), $1,$2} END{print "\n}"}'
+  local checks="" key status lvl ok_n=0 warn_n=0 err_n=0 overall=ok
+  while IFS=$'\t' read -r key status; do
+    [[ -z "$key" ]] && continue
+    lvl="$(level_of "$status")"
+    case "$lvl" in
+      ok) ok_n=$((ok_n + 1)) ;;
+      warn) warn_n=$((warn_n + 1)) ;;
+      error) err_n=$((err_n + 1)) ;;
+    esac
+    checks+="${checks:+,}{\"key\":$(json_str "$key"),\"group\":$(json_str "$(meta_group "$key")"),\"label\":$(json_str "$(meta_label "$key")"),\"status\":$(json_str "$status"),\"level\":$(json_str "$lvl"),\"hint\":$(json_str "$(meta_hint "$key" "$status")")}"
+  done < <(run_checks)
+  if [[ $err_n -gt 0 ]]; then
+    overall=error
+  elif [[ $warn_n -gt 0 ]]; then
+    overall=warn
+  fi
+  printf '{"schema":"macstrap.doctor/v1","overall":%s,"summary":{"ok":%d,"warn":%d,"error":%d},"checks":[%s]}\n' \
+    "$(json_str "$overall")" "$ok_n" "$warn_n" "$err_n" "$checks"
 }
 
 safe_fix() {
@@ -107,8 +170,7 @@ echo "-- Core --"
 check_line "Homebrew" homebrew
 check_line "chezmoi" chezmoi
 check_line "mise" mise
-if command -v gh >/dev/null 2>&1; then gh_stat=ok; else gh_stat=missing; fi
-printf '  %-15s %s\n' "GitHub CLI" "$(paint "$gh_stat")"
+check_line "GitHub CLI" github
 echo
 
 echo "-- Runtimes --"

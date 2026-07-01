@@ -73,6 +73,23 @@ jobs:
             brew bundle list --file="$f" >/dev/null
           done
 
+  contracts:
+    name: JSON contracts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Every --json contract is valid JSON with the right schema
+        run: |
+          set -euo pipefail
+          export DOTFILES_DIR="$PWD"
+          bash scripts/dev-doctor.sh --json     | jq -e '.schema=="macstrap.doctor/v1" and (.checks|type)=="array"'
+          bash scripts/apps.sh --list --json    | jq -e '.schema=="macstrap.catalog/v1" and .catalog=="apps"'
+          bash scripts/cli.sh --list --json     | jq -e '.schema=="macstrap.catalog/v1" and .catalog=="cli"'
+          bash scripts/apps.sh cursor --json    | jq -e '.schema=="macstrap.plan/v1"'
+          bash scripts/cli.sh backend --json    | jq -e '.schema=="macstrap.plan/v1"'
+          bash scripts/report.sh --json         | jq -e '.schema=="macstrap.report/v1"'
+          bash scripts/security-check.sh --json | jq -e '.schema=="macstrap.security/v1"'
+
   catalog:
     name: Catalog formulas resolve
     runs-on: macos-latest

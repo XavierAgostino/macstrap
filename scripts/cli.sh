@@ -18,11 +18,13 @@ DOTFILES_DIR="${DOTFILES_DIR:-$HOME/Developer/workspaces/macstrap}"
 CLI_CATALOG="$DOTFILES_DIR/brew/cli.catalog"
 CLI_SELECTED="$DOTFILES_DIR/brew/selected.cli"
 
-# shared UI helpers (log / ok / warn / muted / run_logged) + catalog helpers
+# shared UI helpers (log / ok / warn / muted / run_logged) + catalog + JSON
 # shellcheck source=scripts/lib/ui.sh
 . "$DOTFILES_DIR/scripts/lib/ui.sh"
 # shellcheck source=scripts/lib/catalog.sh
 . "$DOTFILES_DIR/scripts/lib/catalog.sh"
+# shellcheck source=scripts/lib/json.sh
+. "$DOTFILES_DIR/scripts/lib/json.sh"
 
 usage() {
   cat <<'EOF'
@@ -33,9 +35,34 @@ Usage:
   macstrap cli <category>        install a category (e.g. backend, cloud, ai)
   macstrap cli a,b,c             install categories and/or exact tools
   macstrap cli --list            show the catalog, grouped
+  macstrap cli --list --json     the catalog as JSON (for the TUI / agents)
+  macstrap cli a,b,c --dry-run   resolve the selection, install nothing
 
 Recorded selections live in brew/selected.cli and replay on a fresh machine.
 EOF
+}
+
+# macstrap.catalog/v1 — the full CLI catalog plus category and selection state.
+# See docs/JSON-CONTRACTS.md.
+emit_catalog_json() {
+  local cats=() sel=() c k
+  while IFS= read -r c; do [[ -n "$c" ]] && cats+=("$c"); done < <(catalog_categories "$CLI_CATALOG")
+  if [[ -f "$CLI_SELECTED" ]]; then
+    while IFS= read -r k; do [[ -n "$k" ]] && sel+=("$k"); done \
+      < <(sed 's/#.*//; s/[[:space:]]//g; /^$/d' "$CLI_SELECTED")
+  fi
+  printf '{"schema":"macstrap.catalog/v1","catalog":"cli","categories":%s,"selected":%s,"items":%s}\n' \
+    "$(json_str_array ${cats[@]+"${cats[@]}"})" \
+    "$(json_str_array ${sel[@]+"${sel[@]}"})" \
+    "$(catalog_json "$CLI_CATALOG")"
+}
+
+# macstrap.plan/v1 — a resolved selection (keys only), install nothing.
+emit_plan_json() {
+  local ks=() k
+  while IFS= read -r k; do [[ -n "$k" ]] && ks+=("$k"); done < <(printf '%s\n' "$1" | sed '/^$/d')
+  printf '{"schema":"macstrap.plan/v1","catalog":"cli","keys":%s}\n' \
+    "$(json_str_array ${ks[@]+"${ks[@]}"})"
 }
 
 # Print the catalog grouped by category, with descriptions.
@@ -81,11 +108,15 @@ record_selection() {
 }
 
 # --- argument handling ---
-# Pull an optional --verbose out of the args; the rest form the selection.
+# Pull flags out of the args; the rest form the selection.
+JSON=0
+DRY=0
 args=()
 for a in "$@"; do
   case "$a" in
     --verbose) export VERBOSE=1 ;;
+    --json) JSON=1 ;;
+    --dry-run | -n) DRY=1 ;;
     *) args+=("$a") ;;
   esac
 done
@@ -97,10 +128,20 @@ case "${1:-}" in
     exit 0
     ;;
   -l | --list | list)
+    [[ $JSON -eq 1 ]] && {
+      emit_catalog_json
+      exit 0
+    }
     list_catalog
     exit 0
     ;;
 esac
+
+# No selection given: JSON callers want the whole catalog; humans get the picker.
+if [[ $# -eq 0 && $JSON -eq 1 ]]; then
+  emit_catalog_json
+  exit 0
+fi
 
 # Resolve the selection to a newline list of keys.
 if [[ $# -eq 0 ]]; then
@@ -121,10 +162,22 @@ fi
 # Validate before doing anything.
 keys="$(printf '%s\n' "$selection" | valid_keys)"
 count="$(printf '%s\n' "$keys" | sed '/^$/d' | grep -c . || true)"
+
+# JSON / dry-run: resolve only, never install.
+if [[ $JSON -eq 1 ]]; then
+  emit_plan_json "$keys"
+  exit 0
+fi
 if [[ "${count:-0}" -eq 0 ]]; then
   warn "No known CLIs matched your selection."
   echo "  Browse the catalog:  macstrap cli --list"
   exit 1
+fi
+if [[ $DRY -eq 1 ]]; then
+  log "Plan: $count project CLI(s) (dry run — nothing installed)"
+  # shellcheck disable=SC2046  # keys are single words; word-splitting is intended
+  catalog_describe "$CLI_CATALOG" $(printf '%s\n' "$keys" | sed '/^$/d')
+  exit 0
 fi
 
 if ! command -v brew >/dev/null 2>&1; then

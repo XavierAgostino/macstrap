@@ -55,6 +55,21 @@ by the installer, so the CLI stack is reproducible config, not a one-off install
 **Trade-off:** the catalog is a curated list to maintain (formula names drift),
 so it's kept small and CI-validated rather than exhaustive.
 
+## Versioned JSON contracts as the engine/UI seam
+
+**Why:** macstrap is a two-layer product — a boring, reliable shell engine and
+(coming) a Go TUI over it. For the TUI to never drift from or reimplement the
+engine, the scripts expose their state as versioned JSON (`macstrap.doctor/v1`,
+`macstrap.catalog/v1`, `macstrap.plan/v1`, `macstrap.report/v1`,
+`macstrap.security/v1`). The same contracts serve AI agents and CI. Output is
+emitted without a `jq` dependency (a fresh Mac has no packages yet), the human
+and JSON views render from one shared computation so they can't disagree, and a
+CI job validates every contract on each push. Documented in
+[JSON-CONTRACTS.md](JSON-CONTRACTS.md).
+**Trade-off:** a schema is a promise — fields may be added within a version, but
+removals bump it (`/v2`). Worth it: the TUI, agents, and tests all read one
+stable interface instead of scraping human text.
+
 ## Quiet-by-default install, with logs and `--verbose`
 
 **Why:** a fresh install runs long, noisy commands (`brew bundle`, `mise
