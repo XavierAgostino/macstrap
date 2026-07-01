@@ -1,0 +1,44 @@
+# GoReleaser builds the prebuilt macstrap binaries shipped on GitHub Releases.
+# install.sh downloads the right one (checksum-verified), so a fresh Mac never
+# needs a Go toolchain. See docs/DECISIONS.md.
+#
+# Local sanity check:  goreleaser release --snapshot --clean
+version: 2
+
+project_name: macstrap
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: macstrap
+    main: ./cmd/macstrap
+    binary: macstrap
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X main.version={{ .Version }}
+
+archives:
+  - id: macstrap
+    formats: [tar.gz]
+    # Predictable, version-free names so install.sh can fetch them from
+    # /releases/latest/download/ without knowing the tag.
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: checksums.txt
+
+release:
+  github:
+    owner: XavierAgostino
+    name: macstrap
+
+changelog:
+  disable: true

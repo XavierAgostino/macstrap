@@ -58,7 +58,7 @@ so it's kept small and CI-validated rather than exhaustive.
 ## Versioned JSON contracts as the engine/UI seam
 
 **Why:** macstrap is a two-layer product — a boring, reliable shell engine and
-(coming) a Go TUI over it. For the TUI to never drift from or reimplement the
+a Go TUI over it. For the TUI to never drift from or reimplement the
 engine, the scripts expose their state as versioned JSON (`macstrap.doctor/v1`,
 `macstrap.catalog/v1`, `macstrap.plan/v1`, `macstrap.report/v1`,
 `macstrap.security/v1`). The same contracts serve AI agents and CI. Output is
@@ -69,6 +69,32 @@ CI job validates every contract on each push. Documented in
 **Trade-off:** a schema is a promise — fields may be added within a version, but
 removals bump it (`/v2`). Worth it: the TUI, agents, and tests all read one
 stable interface instead of scraping human text.
+
+## A single Go binary is the `macstrap` entrypoint (shell as fallback)
+
+**Why:** with the TUI in Go and the engine in shell, having two competing
+front ends would confuse everyone. So the Go binary *is* `macstrap`: no
+arguments opens the TUI, and any subcommand (`macstrap doctor --json`,
+`macstrap install --dry-run`, …) is delegated **verbatim** to the bash
+entrypoint (`bin/macstrap`), which mirrors its exit code. The Go layer renders
+or delegates; it never reimplements setup logic. `bin/macstrap` stays fully
+functional as the fallback for anyone without the binary (and it's what CI and
+the installer use directly).
+**Trade-off:** subcommands pay one extra `bash` exec through the Go front end;
+negligible next to Homebrew, and it buys one entrypoint with one behavior for
+humans, scripts, and agents alike.
+
+## Prebuilt binaries via GoReleaser (no Go toolchain on a fresh Mac)
+
+**Why:** requiring `go build` on a brand-new Mac would defeat the point of a
+one-line bootstrap. So tagged releases ship darwin `amd64`/`arm64` binaries with
+a `checksums.txt`; `install.sh` downloads the right one and verifies it against
+the checksum before installing to `~/.local/bin`. It runs **after** the shell
+bootstrap and is non-fatal — a fresh Mac is fully set up by the engine whether
+or not the binary lands, keeping the first install safe.
+**Trade-off:** a build/release pipeline to maintain (`.goreleaser.yaml`,
+`release.yml`), and the binary lags a tag; acceptable for a native TUI that
+starts instantly and needs no runtime.
 
 ## Quiet-by-default install, with logs and `--verbose`
 

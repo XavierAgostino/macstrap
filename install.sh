@@ -19,6 +19,7 @@ macstrap will:
   1. Install Homebrew if it is missing
   2. Clone $REPO_SLUG to $DOTFILES_DIR
   3. Run scripts/bootstrap.sh (mode: ${MODE:-default})
+  4. Install the macstrap TUI binary (optional; the shell engine works without it)
 
 EOF
 
@@ -40,4 +41,14 @@ if [[ ! -d "$DOTFILES_DIR/.git" ]]; then
   git clone "https://github.com/$REPO_SLUG.git" "$DOTFILES_DIR"
 fi
 
-exec bash "$DOTFILES_DIR/scripts/bootstrap.sh"
+# The shell engine is the guaranteed first-install path; run it to completion.
+bash "$DOTFILES_DIR/scripts/bootstrap.sh"
+
+# Then install the prebuilt TUI binary as an enhancement. Non-fatal: if there's
+# no release for this platform (or we're offline), the shell engine still works
+# via "$DOTFILES_DIR/bin/macstrap".
+if ! bash "$DOTFILES_DIR/scripts/install-binary.sh"; then
+  echo
+  echo "macstrap TUI binary not installed — use the shell engine at:"
+  echo "  $DOTFILES_DIR/bin/macstrap"
+fi
