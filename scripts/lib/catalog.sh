@@ -52,6 +52,20 @@ catalog_emit() {
   done
 }
 
+# Print "key   description" (padded) for the given keys, in the order given.
+# Gives each tool a reason to exist in install output.
+#   catalog_describe <catalog-file> <key>...
+catalog_describe() {
+  local cf="$1"
+  shift
+  local key
+  for key in "$@"; do
+    [[ -z "$key" ]] && continue
+    awk -F'|' -v k="$key" '
+      !/^[[:space:]]*#/ && $1 == k { printf "  %-14s %s\n", $1, $5; exit }' "$cf"
+  done
+}
+
 # Expand a comma-separated selection of categories and/or keys to a newline
 # list of keys (categories expand to their members; unknown tokens pass through
 # as literal keys).

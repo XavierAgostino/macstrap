@@ -21,7 +21,7 @@ macstrap: reproducible macOS developer setup
 
 Usage:
   macstrap install [--minimal|--headless] [--work|--personal]
-                   [--apps|--no-apps] [--dry-run]
+                   [--apps|--no-apps] [--dry-run] [--verbose]
   macstrap apps [group|a,b,c]   pick GUI apps (interactive) or install a group/list
   macstrap cli  [group|a,b,c]   install optional dev CLIs (interactive picker if no args)
   macstrap doctor [--json|--fix]
@@ -61,6 +61,7 @@ case "$cmd" in
         --apps | --interactive) export APPS="interactive" ;;
         --no-apps) export APPS="0" ;;
         --dry-run | -n) export DRY_RUN="1" ;;
+        --verbose) export VERBOSE="1" ;;
         *)
           echo "Unknown option: $1 (run: macstrap help)" >&2
           exit 1

@@ -55,6 +55,20 @@ by the installer, so the CLI stack is reproducible config, not a one-off install
 **Trade-off:** the catalog is a curated list to maintain (formula names drift),
 so it's kept small and CI-validated rather than exhaustive.
 
+## Quiet-by-default install, with logs and `--verbose`
+
+**Why:** a fresh install runs long, noisy commands (`brew bundle`, `mise
+install`). Dumping every line makes real errors easy to miss and feels
+unpolished; a fake percentage bar would be dishonest since Homebrew timing is
+unpredictable. So the installer shows honest step-based progress (`[n/10]`
+phases with `ok`/`skip`/`warn`/`fail`), routes noisy steps through a `gum`
+spinner, and captures their output to a per-step log shown only on failure.
+`--verbose` streams everything for debugging. Shared helpers live in
+`scripts/lib/ui.sh` so the installer and CLIs speak one output language.
+**Trade-off:** hiding output by default risks concealing a hang, so only
+provably non-interactive steps are wrapped — Homebrew's installer and every
+`chezmoi` step always stream, and non-TTY/CI runs stream too.
+
 ## gitleaks pre-commit hook
 
 **Why:** the repo should contain `op://` references and templates only. A scanner

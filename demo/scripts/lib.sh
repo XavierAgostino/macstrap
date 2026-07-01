@@ -32,5 +32,7 @@ title() {
 
 section() { printf '\n%s==>%s %s\n' "$D_B" "$D_X" "$1"; }
 row_ok() { printf '  %-15s %sok%s\n' "$1" "$D_G" "$D_X"; }
+ok_line() { printf '  %sok%s   %s\n' "$D_G" "$D_X" "$1"; } # status-first, matches scripts/lib/ui.sh
+desc_row() { printf '  %-14s %s\n' "$1" "$2"; }
 row_val() { printf '  %-15s %s\n' "$1" "$2"; }
 muted() { printf '%s%s%s\n' "$D_MUT" "$1" "$D_X"; }

@@ -18,17 +18,11 @@ DOTFILES_DIR="${DOTFILES_DIR:-$HOME/Developer/workspaces/macstrap}"
 CLI_CATALOG="$DOTFILES_DIR/brew/cli.catalog"
 CLI_SELECTED="$DOTFILES_DIR/brew/selected.cli"
 
+# shared UI helpers (log / ok / warn / muted / run_logged) + catalog helpers
+# shellcheck source=scripts/lib/ui.sh
+. "$DOTFILES_DIR/scripts/lib/ui.sh"
 # shellcheck source=scripts/lib/catalog.sh
 . "$DOTFILES_DIR/scripts/lib/catalog.sh"
-
-# --- output helpers (match bootstrap.sh: colored labels, no emoji) ---
-b=$'\033[1;34m'
-g=$'\033[32m'
-y=$'\033[33m'
-x=$'\033[0m'
-log() { printf '\n%s==>%s %s\n' "$b" "$x" "$*"; }
-ok() { printf '  %sok%s   %s\n' "$g" "$x" "$*"; }
-warn() { printf '  %swarn%s %s\n' "$y" "$x" "$*"; }
 
 usage() {
   cat <<'EOF'
@@ -87,6 +81,16 @@ record_selection() {
 }
 
 # --- argument handling ---
+# Pull an optional --verbose out of the args; the rest form the selection.
+args=()
+for a in "$@"; do
+  case "$a" in
+    --verbose) export VERBOSE=1 ;;
+    *) args+=("$a") ;;
+  esac
+done
+set -- ${args[@]+"${args[@]}"}
+
 case "${1:-}" in
   -h | --help | help)
     usage
@@ -137,16 +141,18 @@ mkdir -p "$gen"
   catalog_emit "$CLI_CATALOG" $(printf '%s\n' "$keys" | sed '/^$/d')
 } >"$gen/Brewfile.cli.local"
 
-log "Installing $count CLI(s):"
-printf '%s\n' "$keys" | sed '/^$/d' | sed 's/^/  - /'
-if brew bundle --file="$gen/Brewfile.cli.local"; then
-  ok "Installed $count CLI(s)"
+log "Installing $count project CLI(s)"
+# Give each tool a reason to exist before the (quiet-by-default) install runs.
+# shellcheck disable=SC2046  # keys are single words; word-splitting is intended
+catalog_describe "$CLI_CATALOG" $(printf '%s\n' "$keys" | sed '/^$/d')
+if run_logged "Installing $count project CLI(s)" brew bundle --file="$gen/Brewfile.cli.local"; then
+  while IFS= read -r k; do [[ -n "$k" ]] && ok "$k"; done < <(printf '%s\n' "$keys" | sed '/^$/d')
 else
-  warn "Some CLIs failed to install (see brew output above)."
+  warn "Some CLIs failed to install (re-run with --verbose for details)."
 fi
 
 # Record the selection so a fresh machine replays it.
 # shellcheck disable=SC2046  # keys are single words; word-splitting is intended
 record_selection $(printf '%s\n' "$keys" | sed '/^$/d')
-ok "Recorded selection in brew/selected.cli"
-echo "  Replayed on a fresh Mac by the installer (macstrap install)."
+ok "Recorded in brew/selected.cli"
+muted "Replayed automatically on your next Mac."
