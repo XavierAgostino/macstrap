@@ -17,9 +17,20 @@ import (
 	"github.com/XavierAgostino/macstrap/internal/tui"
 )
 
+// version is set at build time by GoReleaser (-X main.version=...).
+var version = "dev"
+
 func main() {
 	eng := engine.New()
 	args := os.Args[1:]
+
+	if len(args) == 1 {
+		switch args[0] {
+		case "--version", "-v", "version":
+			fmt.Println("macstrap", version)
+			return
+		}
+	}
 
 	if len(args) == 0 {
 		if err := tui.Run(eng); err != nil {

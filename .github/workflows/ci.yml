@@ -14,12 +14,12 @@ jobs:
       - name: shellcheck
         run: |
           sudo apt-get update -qq && sudo apt-get install -y shellcheck
-          shellcheck -x bin/macstrap scripts/*.sh scripts/lib/*.sh demo/scripts/*.sh demo/record.sh scripts/hooks/pre-commit install.sh
+          shellcheck -x bin/macstrap scripts/*.sh scripts/lib/*.sh demo/scripts/*.sh demo/record.sh scripts/hooks/pre-commit install.sh scripts/install-binary.sh
       - name: shfmt
         run: |
           curl -fsSL -o /tmp/shfmt https://github.com/mvdan/sh/releases/download/v3.13.1/shfmt_v3.13.1_linux_amd64
           chmod +x /tmp/shfmt
-          /tmp/shfmt -i 2 -ci -d bin/macstrap scripts/*.sh scripts/lib/*.sh demo/scripts/*.sh demo/record.sh scripts/hooks/pre-commit install.sh
+          /tmp/shfmt -i 2 -ci -d bin/macstrap scripts/*.sh scripts/lib/*.sh demo/scripts/*.sh demo/record.sh scripts/hooks/pre-commit install.sh scripts/install-binary.sh
       - name: catalog hygiene (no core dupes, well-formed rows)
         run: bash scripts/check-catalog.sh
       - name: actionlint
@@ -89,6 +89,29 @@ jobs:
           bash scripts/cli.sh backend --json    | jq -e '.schema=="macstrap.plan/v1"'
           bash scripts/report.sh --json         | jq -e '.schema=="macstrap.report/v1"'
           bash scripts/security-check.sh --json | jq -e '.schema=="macstrap.security/v1"'
+
+  go:
+    name: Go (build + test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: gofmt
+        run: |
+          unformatted="$(gofmt -l cmd internal)"
+          if [ -n "$unformatted" ]; then
+            echo "These files need gofmt:"; echo "$unformatted"; exit 1
+          fi
+      - name: go vet
+        run: go vet ./...
+      - name: go build
+        run: go build ./...
+      - name: go test
+        # The engine tests shell out to the scripts, exercising the Go/shell seam.
+        run: DOTFILES_DIR="$PWD" go test ./...
 
   catalog:
     name: Catalog formulas resolve
