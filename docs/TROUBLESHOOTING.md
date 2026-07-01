@@ -1,5 +1,7 @@
 # Troubleshooting and recovery
 
+Symptom-first fixes. Doc index: [README.md](README.md).
+
 ## chezmoi
 
 **"config file template has changed, run chezmoi init to regenerate"**
@@ -28,7 +30,7 @@ Open a fresh login shell and check resolution:
 
 ```bash
 exec zsh
-doctor
+macstrap doctor
 ```
 
 `node` and `npm` come from mise. Confirm with `mise ls` and `mise doctor`.
