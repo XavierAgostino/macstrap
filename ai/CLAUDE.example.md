@@ -22,7 +22,7 @@ cp ai/CLAUDE.example.md ~/.claude/CLAUDE.md   # then edit to taste
 
 ## How to approach work
 
-- Understand before changing, read surrounding code and team conventions first.
+- Understand before changing. Read surrounding code and team conventions first.
 - Prefer small, reversible steps; make a safety net before anything hard to undo.
 - Verify by running/observing real behavior, not by assertion.
 - Right altitude: solve the problem asked; avoid speculative abstraction.
