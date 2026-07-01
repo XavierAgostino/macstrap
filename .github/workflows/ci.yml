@@ -36,7 +36,7 @@ jobs:
         with:
           node-version: "20"
       - run: npm install -g markdownlint-cli
-      - run: markdownlint README.md CHANGELOG.md docs/*.md ai/*.md
+      - run: markdownlint README.md CHANGELOG.md "docs/**/*.md" "ai/*.md"
 
   render:
     name: chezmoi render (${{ matrix.profile }})
