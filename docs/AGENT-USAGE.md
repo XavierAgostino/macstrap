@@ -1,16 +1,16 @@
 # Agent-safe usage
 
-Guidance for AI agents and automation driving macstrap. Everything here is
-scriptable and non-interactive, and every action is either a preview or a
-declarative apply.
+Scriptable, non-interactive guidance for AI agents and CI. Use the `macstrap`
+CLI (`macstrap install --dry-run`, `macstrap doctor --json`) or env vars
+directly — env vars are the low-level interface.
 
-The `macstrap` CLI wraps these (`macstrap install --dry-run`,
-`macstrap doctor --json`, `macstrap install --headless`). Agents may use either
-the CLI or the env vars below; the env vars are the low-level interface.
+```bash
+PROFILE=work APPS=cursor,orbstack,tableplus DRY_RUN=1 bash scripts/bootstrap.sh
+```
 
-Structured, versioned output (doctor, apps/cli catalogs, report, security) is
-documented in [`JSON-CONTRACTS.md`](JSON-CONTRACTS.md) — the same contracts the
-Go TUI reads.
+Env vars: `MODE`, `PROFILE`, `APPS`, `DRY_RUN`. Full list in
+[README](../README.md) (Manual setup). Structured output:
+[`JSON-CONTRACTS.md`](JSON-CONTRACTS.md).
 
 ## Safe commands
 
@@ -34,8 +34,7 @@ bash scripts/dev-doctor.sh --fix
 
 ## Guardrails (do not do automatically)
 
-- Do **not** run `scripts/macos-defaults.sh` without explicit user confirmation;
-  it changes system preferences.
+- Do **not** run `scripts/macos-defaults.sh` without explicit user confirmation.
 - Do **not** install GUI apps in headless or CI contexts. Use `MODE=headless` or
   `APPS=0`.
 - Do **not** modify SSH config, signing keys, or DNS automatically.
@@ -44,25 +43,12 @@ bash scripts/dev-doctor.sh --fix
 
 ## Status contract
 
-`dev-doctor.sh --json` returns a flat status object:
-
-```json
-{
-  "homebrew": "ok",
-  "chezmoi": "ok",
-  "mise": "ok",
-  "node": "ok",
-  "git_signing": "off",
-  "onepassword": "locked",
-  "gitleaks": "ok"
-}
-```
-
-Treat `missing`, `locked`, `warning`, and `off` as actionable; `ok` is healthy.
+`macstrap doctor --json` emits `macstrap.doctor/v1` — see
+[JSON-CONTRACTS.md](JSON-CONTRACTS.md). Treat `missing`, `locked`, `warning`,
+and `off` as actionable; `ok` is healthy.
 
 ## Required vs optional steps
 
-The installer separates **required** steps (Homebrew, clone, chezmoi init/apply,
-core packages) from **optional** ones (GUI apps, profile packages, runtimes,
-dev-doctor). A required failure aborts; optional failures are collected and
-printed as warnings in the final summary, so a run never fails silently.
+**Required** (Homebrew, clone, chezmoi init/apply, core packages) abort on failure.
+**Optional** (GUI apps, profile packages, runtimes, dev-doctor) collect warnings
+in the final summary — a run never fails silently.

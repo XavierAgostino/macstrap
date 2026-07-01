@@ -1,7 +1,7 @@
 # Work vs. personal separation
 
-How this setup keeps a personal machine and a work machine cleanly separated,
-and the guardrails to respect on a company-issued laptop.
+Profiles, signing, and compliance for personal vs work machines.
+Setup context: [SETUP.md](SETUP.md) · Doc index: [README.md](README.md).
 
 ## The profile model
 

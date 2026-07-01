@@ -12,4 +12,3 @@ format. For a quick prose summary see [../DECISIONS.md](../DECISIONS.md).
 | [0004](0004-1password-for-secrets.md) | 1Password for secrets and commit signing | Accepted |
 | [0005](0005-split-brewfiles.md) | Split Brewfiles by role | Accepted |
 | [0006](0006-optional-cli-catalog.md) | Optional CLI catalog (discovery over default install) | Accepted |
-| [0005](0005-split-brewfiles.md) | Split Brewfiles by role | Accepted |

@@ -1,16 +1,15 @@
 # Setup (fresh Mac)
 
-A detailed walkthrough of standing up a new machine from this repo. For the short
-version, see the README.
+Full walkthrough for a new machine. Short version: [README](../README.md).
+Doc index: [docs/README.md](README.md).
 
 ## Prerequisites
 
 - Apple Silicon Mac, current macOS.
-- Internet access. Sign in to the App Store / Apple ID as desired.
+- Internet access.
 
 > [!NOTE]
-> On a work machine, complete any IT/MDM enrollment first, and confirm you have
-> admin rights (or know what is restricted) before installing.
+> On a work machine, complete IT/MDM enrollment first and confirm admin rights.
 
 ## 1. Install Homebrew
 
@@ -19,7 +18,7 @@ version, see the README.
 eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
-Homebrew also installs the Xcode Command Line Tools, which provide git.
+Homebrew also installs the Xcode Command Line Tools (git).
 
 ## 2. Clone and bootstrap
 
@@ -28,56 +27,51 @@ git clone https://github.com/XavierAgostino/macstrap.git ~/Developer/workspaces/
 bash ~/Developer/workspaces/macstrap/scripts/bootstrap.sh
 ```
 
-The bootstrap is idempotent (safe to re-run) and does, in order:
+The bootstrap is idempotent and runs, in order:
 
-1. Installs Homebrew if it is missing.
-2. Clones this repo if it is missing.
-3. Installs chezmoi and activates the gitleaks pre-commit hook.
-4. Runs `chezmoi init`, which prompts for a profile (`personal` or `work`), name,
-   email, and GitHub username. These are stored in
-   `~/.config/chezmoi/chezmoi.toml` and are not committed.
-5. Runs `chezmoi diff` then `chezmoi apply` to write managed dotfiles to `$HOME`.
-6. Runs `mise install` to install runtimes from `~/.config/mise/config.toml`.
-7. Runs `brew bundle` for `Brewfile.core`, the app set, and the active profile's
-   Brewfile.
-8. Runs `dev-doctor` as a health check.
+1. Homebrew (if missing) and repo clone (if missing).
+2. chezmoi + gitleaks pre-commit hook.
+3. `chezmoi init` — profile (`personal` or `work`), name, email, GitHub username →
+   `~/.config/chezmoi/chezmoi.toml` (not committed).
+4. `chezmoi diff` then `chezmoi apply`.
+5. `mise install` from `~/.config/mise/config.toml`.
+6. `brew bundle` for `Brewfile.core`, apps, and profile Brewfile.
+7. `dev-doctor` health check.
 
 > [!TIP]
-> Skip the profile prompt with `PROFILE=work`, and skip the GUI apps with `APPS=0`.
+> `PROFILE=work` skips the profile prompt. `APPS=0` skips GUI apps.
 
 ## 3. Open a new terminal
 
-Run `exec zsh`, or open a new Ghostty window, to load the new shell.
+Run `exec zsh`, or open a new Ghostty window.
 
-## 4. Post-bootstrap (manual, deliberate)
+## 4. Verify
 
-- **1Password:** open the app and sign in (the app and CLI ship in `Brewfile.core`).
-  Verify the CLI with `op vault list`.
-- **GitHub:** run `gh auth login`. On a work machine, add the work account (see
-  [work-separation.md](work-separation.md)).
-- **AI config:** deploy assistant instructions per [ai/README.md](../ai/README.md).
-- **Commit signing** (optional, recommended): see [work-separation.md](work-separation.md).
-- **Terminal:** set Ghostty as your default terminal.
-
-## 5. Verify
-
-The bootstrap links the `macstrap` CLI onto your PATH, so after opening a new
-terminal:
+Confirm the bootstrap applied cleanly:
 
 ```bash
 macstrap doctor   # health check
 macstrap report   # what macstrap manages
-chezmoi verify    # exits 0 when $HOME matches the source
+chezmoi verify    # $HOME matches source
 ```
 
-`macstrap doctor` should report chezmoi state clean, mise listing Node, and tools
-resolving to Homebrew and mise paths.
+Expect chezmoi clean, mise listing Node, tools on Homebrew/mise paths. Warnings
+about 1Password or signing before post-bootstrap are normal.
+
+## 5. Post-bootstrap
+
+Complete these after verify:
+
+- [ ] **1Password** — sign in; verify with `op vault list`
+- [ ] **GitHub** — `gh auth login` (work account on a work machine — see
+  [work-separation.md](work-separation.md))
+- [ ] **Commit signing** (recommended) — [work-separation.md](work-separation.md)
+- [ ] **AI config** — [ai/README.md](../ai/README.md)
+- [ ] **Terminal** — set Ghostty as default
 
 ## 6. Optional CLIs (per project, not per machine)
 
-The core toolchain stays lean by design. Project-specific CLIs — cloud, database,
-deploy, Kubernetes, and so on — are **discovery, not default install**: nothing in
-the catalog ships with the base bootstrap. Add them when a project needs them:
+Discovery, not default install — add when a project needs them:
 
 ```bash
 macstrap cli                  # interactive, grouped picker
@@ -87,15 +81,11 @@ macstrap cli supabase,stripe  # exact tools
 macstrap cli --list           # browse the full catalog
 ```
 
-Each run installs immediately **and** appends your choice to `brew/selected.cli`.
-The installer replays that file on the next machine, so your CLI stack is part of
-your reproducible setup rather than a one-off `brew install`. `macstrap report`
-lists what's recorded and whether it's installed.
+Selections append to `brew/selected.cli` and replay on the next machine.
+`macstrap report` lists recorded vs installed.
 
-The catalog lives in [`brew/cli.catalog`](../brew/cli.catalog) as
-`key|formula|kind|categories|description` rows (the same schema as
-`brew/apps.catalog`). Add a line to extend it — CI enforces that nothing here
-duplicates `Brewfile.core`.
+Catalog: [`brew/cli.catalog`](../brew/cli.catalog) (`key|formula|kind|categories|description`).
+CI blocks duplicates of `Brewfile.core`.
 
 | Group | Tools |
 | --- | --- |
@@ -109,3 +99,17 @@ duplicates `Brewfile.core`.
 | `ai` | ollama · llm · aider |
 | `api` | httpie · yq |
 | `power-user` | lazygit · atuin · direnv · hyperfine · watchexec · just |
+
+## 7. Default toolchain and apps
+
+**Core (always):** `chezmoi` · `mise` · `starship` · `ghostty` · `zsh`
+(+ autosuggestions & syntax-highlighting) · `git` + `delta` · `gh` · `eza` ·
+`bat` · `fd` · `ripgrep` · `fzf` · `zoxide` · `jq` · `tmux` · `pnpm` · `uv` ·
+`1password` + `1password-cli`
+
+**Default GUI apps:** Cursor, VS Code, Claude Code, Ghostty, Chrome, Raycast,
+Rectangle, 1Password, OrbStack, TablePlus, Figma, Slack, Zoom, Notion,
+Obsidian, Spotify — see [`brew/Brewfile.apps`](../brew/Brewfile.apps). More
+options are commented out there.
+
+Edit `brew/Brewfile.{core,apps,personal,work}` to customize.
