@@ -6,7 +6,7 @@ useDefault = true
 
 [allowlist]
 description = "Dotfiles allowlist"
-# 1Password secret references are pointers, not secrets — they are the whole point.
+# 1Password secret references are pointers, not secrets, they are the whole point.
 regexes = [
   '''op://[^\s"']+''',
 ]

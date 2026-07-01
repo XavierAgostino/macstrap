@@ -1,7 +1,7 @@
 # Global Engineering Instructions (example)
 
 A starting-point `~/.claude/CLAUDE.md` for AI coding assistants. **Customize it**
-— make it sound like *you* and match how *you* work. Deploy with:
+to sound like you and match how you work. Deploy with:
 
 ```bash
 cp ai/CLAUDE.example.md ~/.claude/CLAUDE.md   # then edit to taste
@@ -20,7 +20,7 @@ cp ai/CLAUDE.example.md ~/.claude/CLAUDE.md   # then edit to taste
   claim done until verified.
 
 ## How to approach work
-- Understand before changing — read surrounding code and team conventions first.
+- Understand before changing, read surrounding code and team conventions first.
 - Prefer small, reversible steps; make a safety net before anything hard to undo.
 - Verify by running/observing real behavior, not by assertion.
 - Right altitude: solve the problem asked; avoid speculative abstraction.
@@ -34,7 +34,7 @@ cp ai/CLAUDE.example.md ~/.claude/CLAUDE.md   # then edit to taste
 - Branch before committing on the default branch; commit/push only when asked.
 - Small, logically-scoped commits with clear messages explaining the *why*.
 - Keep PRs small and reviewable.
-- (Personal preference — edit freely.) No AI/co-author attribution on commits.
+- (Personal preference, edit freely.) No AI/co-author attribution on commits.
 
 ## Testing & documentation
 - Test changes before calling them done; add/update tests when behavior changes.

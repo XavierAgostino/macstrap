@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #
-# macOS system defaults — opinionated but sensible developer settings.
+# macOS system defaults, opinionated but sensible developer settings.
 # Run deliberately (NOT part of bootstrap):  bash scripts/macos-defaults.sh
 #
 # Every setting here is a reversible preference toggle (no deletions). You can
 # undo any of it in System Settings or by flipping the value. Comment out
-# anything you disagree with — it's meant to be read and tuned.
+# anything you disagree with, it's meant to be read and tuned.
 #
 set -euo pipefail
 
@@ -14,7 +14,7 @@ echo "Applying macOS developer defaults… (close System Settings first)"
 # osascript -e 'tell app "System Settings" to quit' 2>/dev/null || true
 
 ############################################################
-# Keyboard — fast key repeat (great for editing/vim motions)
+# Keyboard, fast key repeat (great for editing/vim motions)
 ############################################################
 defaults write NSGlobalDomain KeyRepeat -int 2          # fast repeat
 defaults write NSGlobalDomain InitialKeyRepeat -int 15  # short delay
@@ -42,7 +42,7 @@ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 chflags nohidden "$HOME/Library" 2>/dev/null || true
 
 ############################################################
-# Screenshots — keep the desktop clean
+# Screenshots, keep the desktop clean
 ############################################################
 mkdir -p "$HOME/Screenshots"
 defaults write com.apple.screencapture location -string "$HOME/Screenshots"
@@ -50,21 +50,21 @@ defaults write com.apple.screencapture type -string "png"
 defaults write com.apple.screencapture disable-shadow -bool true
 
 ############################################################
-# Save / print panels — expand by default (less clicking)
+# Save / print panels, expand by default (less clicking)
 ############################################################
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
 defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
 
 ############################################################
-# Trackpad — tap to click
+# Trackpad, tap to click
 ############################################################
 defaults write com.apple.driver.AppleBitmapTouchpad Clicking -bool true
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
 ############################################################
-# Dock — preference, tweak freely
+# Dock, preference, tweak freely
 ############################################################
 defaults write com.apple.dock tilesize -int 48
 defaults write com.apple.dock autohide -bool true
@@ -72,7 +72,7 @@ defaults write com.apple.dock show-recents -bool false
 defaults write com.apple.dock mru-spaces -bool false   # don't reorder Spaces by use
 
 ############################################################
-# Apply — restart affected apps
+# Apply, restart affected apps
 ############################################################
 for app in Finder Dock SystemUIServer; do killall "$app" 2>/dev/null || true; done
 

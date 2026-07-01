@@ -5,7 +5,7 @@
 {{- $name := promptStringOnce . "name" "Full name for git" -}}
 {{- $email := promptStringOnce . "email" "Git email for this profile" -}}
 {{- $githubUser := promptStringOnce . "githubUser" "GitHub username" -}}
-{{- /* Optional — keep any value already set, else default empty (no prompt). */ -}}
+{{- /* Optional, keep any value already set, else default empty (no prompt). */ -}}
 {{- $signingKey := index . "signingKey" | default "" -}}
 {{- $workEmail := index . "workEmail" | default "" -}}
 {{- $workName := index . "workName" | default "" -}}

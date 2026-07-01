@@ -1,65 +1,70 @@
-# Setup — fresh Mac
+# Setup (fresh Mac)
 
-Detailed walkthrough of standing up a new machine from this repo. For the short
-version see the README.
+A detailed walkthrough of standing up a new machine from this repo. For the short
+version, see the README.
 
 ## Prerequisites
 
-- Apple Silicon Mac, macOS current.
+- Apple Silicon Mac, current macOS.
 - Internet access. Sign in to the App Store / Apple ID as desired.
-- On a **work** machine: complete any IT/MDM enrollment first, and confirm you
-  have admin (or know what's restricted) before installing.
 
-## 1. Homebrew + GitHub auth (the repo is private)
+> [!NOTE]
+> On a work machine, complete any IT/MDM enrollment first, and confirm you have
+> admin rights (or know what is restricted) before installing.
+
+## 1. Install Homebrew
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 eval "$(/opt/homebrew/bin/brew shellenv)"
-brew install gh && gh auth login        # personal GitHub account, HTTPS, browser
 ```
 
-## 2. Clone + bootstrap
+Homebrew also installs the Xcode Command Line Tools, which provide git.
+
+## 2. Clone and bootstrap
 
 ```bash
-gh repo clone XavierAgostino/macstrap ~/Developer/workspaces/macstrap
+git clone https://github.com/XavierAgostino/macstrap.git ~/Developer/workspaces/macstrap
 bash ~/Developer/workspaces/macstrap/scripts/bootstrap.sh
 ```
 
-The bootstrap is **idempotent** (safe to re-run) and does, in order:
+The bootstrap is idempotent (safe to re-run) and does, in order:
 
-1. Installs **Homebrew** if missing.
-2. Clones this repo if missing.
-3. Installs **chezmoi** and activates the gitleaks pre-commit hook.
-4. `chezmoi init` — prompts for **profile** (`personal`/`work`), name, email,
-   GitHub username (stored in `~/.config/chezmoi/chezmoi.toml`, not committed).
-5. `chezmoi diff` then `chezmoi apply` — writes managed dotfiles to `$HOME`.
-6. `mise install` — installs runtimes from `~/.config/mise/config.toml`.
-7. `brew bundle` — `Brewfile.core` plus the active profile's Brewfile.
-8. `dev-doctor` — health check.
+1. Installs Homebrew if it is missing.
+2. Clones this repo if it is missing.
+3. Installs chezmoi and activates the gitleaks pre-commit hook.
+4. Runs `chezmoi init`, which prompts for a profile (`personal` or `work`), name,
+   email, and GitHub username. These are stored in
+   `~/.config/chezmoi/chezmoi.toml` and are not committed.
+5. Runs `chezmoi diff` then `chezmoi apply` to write managed dotfiles to `$HOME`.
+6. Runs `mise install` to install runtimes from `~/.config/mise/config.toml`.
+7. Runs `brew bundle` for `Brewfile.core`, the app set, and the active profile's
+   Brewfile.
+8. Runs `dev-doctor` as a health check.
 
-To skip the profile prompt: `PROFILE=work bash scripts/bootstrap.sh`.
+> [!TIP]
+> Skip the profile prompt with `PROFILE=work`, and skip the GUI apps with `APPS=0`.
 
-## 2. Open a new terminal
+## 3. Open a new terminal
 
-`exec zsh` or open a new Ghostty window to load the new shell.
+Run `exec zsh`, or open a new Ghostty window, to load the new shell.
 
-## 3. Post-bootstrap (manual, deliberate)
+## 4. Post-bootstrap (manual, deliberate)
 
-- **1Password**: install the app + CLI, sign in (personal vault, or the company
-  vault on a work machine). Verify with `op vault list`.
-- **GitHub auth**: `gh auth login` (add the work account on a work machine — see
-  `work-separation.md`).
-- **AI config**: deploy assistant instructions per `ai/README.md`.
-- **Commit signing** (optional, recommended for work): see `work-separation.md`.
-- **Fonts/terminal**: Ghostty + Geist Mono come via `Brewfile.core`; set Ghostty
-  as your default terminal.
+- **1Password:** open the app and sign in (the app and CLI ship in `Brewfile.core`).
+  Verify the CLI with `op vault list`.
+- **GitHub:** run `gh auth login`. On a work machine, add the work account (see
+  [work-separation.md](work-separation.md)).
+- **AI config:** deploy assistant instructions per [ai/README.md](../ai/README.md).
+- **Commit signing** (optional, recommended): see [work-separation.md](work-separation.md).
+- **Terminal:** set Ghostty as your default terminal.
 
-## 4. Verify
+## 5. Verify
 
 ```bash
-doctor        # or: bash scripts/dev-doctor.sh
-chezmoi verify   # exits 0 when $HOME matches the source
+doctor          # or: bash scripts/dev-doctor.sh
+chezmoi verify  # exits 0 when $HOME matches the source
 ```
 
-`dev-doctor` should show chezmoi state **clean**, mise listing Node, and tools
-resolving to Homebrew / mise paths.
+`dev-doctor` should report chezmoi state clean, mise listing Node, and tools
+resolving to Homebrew and mise paths.

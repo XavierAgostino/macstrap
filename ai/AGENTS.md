@@ -11,7 +11,7 @@ this where they differ. Defer to company policy on a work machine.
   before anything hard to undo.
 - Verify by running/observing real behavior. Report failures honestly with
   output; don't claim done until verified.
-- Solve the problem asked at the right altitude — no speculative abstraction.
+- Solve the problem asked at the right altitude, no speculative abstraction.
 
 ## Code
 - Match the surrounding style, naming, and patterns. Clear, typed, well-named
@@ -29,6 +29,6 @@ this where they differ. Defer to company policy on a work machine.
 - Document the *why*; keep READMEs current.
 
 ## Security
-- Never hardcode or commit secrets — use the environment's secret manager and
+- Never hardcode or commit secrets, use the environment's secret manager and
   inject at runtime. `.env` holds references/placeholders only.
 - Least privilege; scoped/restricted credentials.

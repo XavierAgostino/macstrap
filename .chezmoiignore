@@ -5,6 +5,8 @@
 .gitleaks.toml
 README.md
 LICENSE
+CHANGELOG.md
+install.sh
 ai
 brew
 docs

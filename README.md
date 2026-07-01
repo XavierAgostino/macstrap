@@ -2,7 +2,7 @@
 
 <h1><picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/logos/apple-dark.svg"><img src=".github/assets/logos/apple-light.svg" height="26" alt=""/></picture>&nbsp; macstrap</h1>
 
-### Bootstrap a modern macOS dev environment — in one command.
+### Bootstrap a modern macOS dev environment, in one command.
 
 [![CI](https://github.com/XavierAgostino/macstrap/actions/workflows/ci.yml/badge.svg)](https://github.com/XavierAgostino/macstrap/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -23,41 +23,62 @@ brand-new Mac is fully configured in minutes.
 
 ## Quick start
 
+One line (installs Homebrew, clones the repo, runs the installer):
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/XavierAgostino/macstrap/main/install.sh)"
+```
+
+Or step by step:
+
 ```bash
 # 1. Homebrew (also installs git via Xcode CLT)
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# 2. Clone + bootstrap (asks: personal or work?)
+# 2. Clone and bootstrap (asks: personal or work?)
 git clone https://github.com/XavierAgostino/macstrap.git ~/Developer/workspaces/macstrap
 bash ~/Developer/workspaces/macstrap/scripts/bootstrap.sh
 
-# 3. Open a new terminal (or: exec zsh)
+# 3. Open a new terminal (or run: exec zsh)
 ```
 
 > [!TIP]
-> The bootstrap is **idempotent** — safe to re-run anytime. Skip the GUI apps
-> with `APPS=0`, or preset the profile with `PROFILE=work`.
+> The installer is idempotent (safe to re-run). Preview any run with `DRY_RUN=1`.
+
+### Install modes
+
+| Command | What it does |
+|---|---|
+| `bash scripts/bootstrap.sh` | Default stack: CLI core, tools, and the default apps |
+| `MODE=minimal bash scripts/bootstrap.sh` | Shell, git, chezmoi, mise, CLI core only |
+| `MODE=interactive bash scripts/bootstrap.sh` | Pick your apps from a menu |
+| `MODE=headless bash scripts/bootstrap.sh` | Core only, no GUI apps (CI / remote Macs) |
+| `DRY_RUN=1 bash scripts/bootstrap.sh` | Preview the plan, change nothing |
+| `bash scripts/dev-doctor.sh --json` | Machine-readable health (agents / CI) |
+
+Fine-grained: `PROFILE=work APPS=cursor,orbstack,tableplus bash scripts/bootstrap.sh`.
+See [`docs/AGENT-USAGE.md`](docs/AGENT-USAGE.md) for automation.
 
 ## What you get
 
-- **Modern shell** — zsh with the [Starship](https://starship.rs) prompt,
+- **Modern shell**: zsh with the [Starship](https://starship.rs) prompt,
   autosuggestions, syntax highlighting, and a clean modular config.
-- **One runtime manager** — [mise](https://mise.jdx.dev) handles Node, Python and
+- **One runtime manager**: [mise](https://mise.jdx.dev) handles Node, Python and
   more *per project* (`.nvmrc` / `.tool-versions` aware). No nvm/pyenv soup.
-- **A great CLI toolbox** — `eza`, `bat`, `fd`, `ripgrep`, `fzf`, `zoxide`,
+- **A great CLI toolbox**: `eza`, `bat`, `fd`, `ripgrep`, `fzf`, `zoxide`,
   `delta`, `jq`, `tmux`, preconfigured.
-- **Terminal** — [Ghostty](https://ghostty.org) with a tuned config.
-- **Personal and work profiles** — one repo; the right identity, packages, and
+- **Terminal**: [Ghostty](https://ghostty.org) with a tuned config.
+- **Personal and work profiles**: one repo; the right identity, packages, and
   commit signing per machine, chosen at setup.
-- **Secrets done right** — [1Password](https://1password.com) integration plus a
+- **Secrets done right**: [1Password](https://1password.com) integration plus a
   `gitleaks` pre-commit hook, so a credential can never land in git.
-- **Signed commits** — SSH commit signing via 1Password (the verified badge on GitHub).
-- **AI assistant config** — a starter `CLAUDE.md` / `AGENTS.md` for Claude Code,
+- **Signed commits**: SSH commit signing via 1Password (the verified badge on GitHub).
+- **AI assistant config**: a starter `CLAUDE.md` / `AGENTS.md` for Claude Code,
   Codex, and Cursor.
-- **macOS defaults** — an opt-in script for sensible Finder, keyboard, and
+- **macOS defaults**: an opt-in script for sensible Finder, keyboard, and
   screenshot preferences.
-- **Tested in CI** — shellcheck and a chezmoi render check on every push.
+- **Tested in CI**: shellcheck and a chezmoi render check on every push.
 
 ## What's installed
 
@@ -66,7 +87,7 @@ bash ~/Developer/workspaces/macstrap/scripts/bootstrap.sh
 `bat` · `fd` · `ripgrep` · `fzf` · `zoxide` · `jq` · `tmux` · `pnpm` · `uv` ·
 `1password` + `1password-cli`
 
-**Apps** — installed out of the box:
+**Apps** installed out of the box:
 
 <div align="center">
 <table>
@@ -98,7 +119,7 @@ bash ~/Developer/workspaces/macstrap/scripts/bootstrap.sh
 </div>
 
 > [!TIP]
-> Edit `brew/Brewfile.{core,apps,personal,work}` to make the toolset yours —
+> Edit `brew/Brewfile.{core,apps,personal,work}` to make the toolset yours.
 > `Brewfile.apps` has more options commented out.
 
 ## Structure
@@ -118,7 +139,7 @@ macstrap/
 ## Profiles (personal vs work)
 
 `chezmoi init` asks for a **profile** and identity. That one choice drives your
-git identity, which Brewfiles install, and commit signing — so the same repo
+git identity, which Brewfiles install, and commit signing, so the same repo
 configures a personal laptop and a locked-down work machine correctly. See
 [`docs/work-separation.md`](docs/work-separation.md).
 
@@ -135,7 +156,7 @@ configures a personal laptop and a locked-down work machine correctly. See
    run the bootstrap).
 
 > [!NOTE]
-> Your name, email, and signing key are **never committed** — they live in
+> Your name, email, and signing key are **never committed**: they live in
 > machine-local chezmoi config, so a fork is generic by default.
 
 ## Why it's built this way
@@ -145,11 +166,11 @@ symlinks, mise over nvm/pyenv, profiles over branches, and more.
 
 ## Docs
 
-- [`docs/SETUP.md`](docs/SETUP.md) — detailed setup
-- [`docs/DECISIONS.md`](docs/DECISIONS.md) — design rationale
-- [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) — fixes and recovery
-- [`docs/work-separation.md`](docs/work-separation.md) — profiles, signing, compliance
+- [`docs/SETUP.md`](docs/SETUP.md): detailed setup
+- [`docs/DECISIONS.md`](docs/DECISIONS.md): design rationale
+- [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md): fixes and recovery
+- [`docs/work-separation.md`](docs/work-separation.md): profiles, signing, compliance
 
 ## License
 
-[MIT](LICENSE) — fork it, ship it, make it yours.
+[MIT](LICENSE): fork it, ship it, make it yours.

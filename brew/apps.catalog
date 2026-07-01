@@ -1,0 +1,20 @@
+# macstrap app catalog.  token|description|tags
+# Used by the installer for `APPS=default` (installs everything tagged "default")
+# and `APPS=interactive` (menu). Add your own lines freely.
+cursor|AI-native editor|default,ai
+visual-studio-code|Code editor|default
+google-chrome|Browser|default
+raycast|Launcher, clipboard, window tools|default
+rectangle|Keyboard window snapping|default
+orbstack|Docker / Linux VMs|default,backend
+tableplus|Database GUI|default,backend,data
+figma|Design|default,design
+slack|Team chat|default,work
+zoom|Meetings|default,work
+notion|Docs and wiki|default
+obsidian|Markdown notes|default,personal
+spotify|Music|default,personal
+firefox|Browser|optional
+arc|Browser|optional
+discord|Community chat|optional
+bruno|API client|optional,backend

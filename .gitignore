@@ -29,3 +29,6 @@ chezmoi.toml
 # --- Generated / transient ---
 *.log
 .cache/
+
+# Generated app selection (installer output)
+brew/generated/
