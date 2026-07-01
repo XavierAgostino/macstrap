@@ -32,3 +32,8 @@ chezmoi.toml
 
 # Generated app selection (installer output)
 brew/generated/
+
+# --- Go build artifacts ---
+# The bash entrypoint bin/macstrap is tracked; a root-level Go build is not.
+/macstrap
+/dist/
