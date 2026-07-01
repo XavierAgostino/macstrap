@@ -1,7 +1,7 @@
 # Decisions (why it is built this way)
 
 Short, ADR-style notes on the non-obvious choices, so they do not get
-relitigated later.
+relitigated later. Formal records are in [adr/](adr/).
 
 ## chezmoi for dotfile management
 

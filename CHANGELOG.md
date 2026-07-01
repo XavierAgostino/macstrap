@@ -6,9 +6,10 @@ All notable changes to macstrap are documented here. The format follows
 
 ## [Unreleased]
 
-### Planned
+### Added
 
-- ADR files under `docs/adr/`.
+- Architecture Decision Records under `docs/adr/` (chezmoi, mise, profiles,
+  1Password, split Brewfiles).
 
 ## [0.4.0] - 2026-06-30
 
