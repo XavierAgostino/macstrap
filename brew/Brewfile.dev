@@ -1,0 +1,8 @@
+# Brewfile.dev — tools for developing macstrap itself (recording demos, linting).
+# NOT installed by the bootstrap. Contributors opt in:
+#   brew bundle --file=brew/Brewfile.dev
+# See docs/DEMOS.md for how the README GIFs are regenerated.
+
+brew "vhs"        # scripted terminal GIFs from declarative .tape files
+brew "shellcheck" # shell linter (also run in CI)
+brew "shfmt"      # shell formatter (also run in CI)

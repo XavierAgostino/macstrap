@@ -22,13 +22,15 @@ macstrap: reproducible macOS developer setup
 Usage:
   macstrap install [--minimal|--headless] [--work|--personal]
                    [--apps|--no-apps] [--dry-run]
-  macstrap apps                 pick and install GUI apps interactively
+  macstrap apps [group|a,b,c]   pick GUI apps (interactive) or install a group/list
+  macstrap cli  [group|a,b,c]   install optional dev CLIs (interactive picker if no args)
   macstrap doctor [--json|--fix]
   macstrap diff                 preview pending dotfile changes
   macstrap apply                apply dotfile changes
   macstrap update               pull the latest and apply
   macstrap report               what macstrap manages on this machine
   macstrap security             secrets / signing / auth posture
+  macstrap demo [hero|apps|cli|doctor]   scripted walkthrough (installs nothing)
   macstrap uninstall [--apply]  back out managed dotfiles (dry-run by default)
   macstrap version
   macstrap help
@@ -37,6 +39,8 @@ Examples:
   macstrap install
   macstrap install --minimal
   macstrap install --work --apps
+  macstrap cli backend,ai
+  macstrap cli --list
   macstrap doctor --fix
 EOF
 }
@@ -66,7 +70,29 @@ case "$cmd" in
     done
     boot
     ;;
-  apps) APPS="interactive" boot ;;
+  apps)
+    if [[ $# -gt 0 ]]; then
+      APPS="$(
+        IFS=,
+        echo "$*"
+      )" boot
+    else
+      APPS="interactive" boot
+    fi
+    ;;
+  cli) bash "$ROOT_DIR/scripts/cli.sh" "$@" ;;
+  demo)
+    case "${1:-hero}" in
+      hero) bash "$ROOT_DIR/demo/scripts/00-hero.sh" ;;
+      apps) bash "$ROOT_DIR/demo/scripts/02-app-picker.sh" ;;
+      cli) bash "$ROOT_DIR/demo/scripts/03-cli-picker.sh" ;;
+      doctor) bash "$ROOT_DIR/demo/scripts/04-doctor.sh" ;;
+      *)
+        echo "usage: macstrap demo [hero|apps|cli|doctor]" >&2
+        exit 2
+        ;;
+    esac
+    ;;
   doctor) bash "$ROOT_DIR/scripts/dev-doctor.sh" "$@" ;;
   report) bash "$ROOT_DIR/scripts/report.sh" ;;
   security) bash "$ROOT_DIR/scripts/security-check.sh" ;;

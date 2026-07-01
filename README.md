@@ -38,6 +38,7 @@ macstrap install --minimal    # shell, git, chezmoi, mise, CLI core only
 macstrap install --work --apps
 macstrap doctor               # health check
 macstrap apps                 # pick GUI apps interactively
+macstrap cli                  # pick optional project CLIs (Supabase, Vercel, ...)
 macstrap update               # pull the latest and apply
 macstrap diff                 # preview pending changes
 ```
@@ -51,6 +52,39 @@ macstrap diff                 # preview pending changes
 <div align="center">
 <img src=".github/assets/demo-apps.gif" width="780" alt="macstrap interactive app picker"/>
 </div>
+
+The core stays lean on purpose. When a project needs them, pull in optional CLIs
+by group or by name — the picker records your choice so a fresh Mac replays it:
+
+```bash
+macstrap cli                  # interactive, grouped picker
+macstrap cli backend,ai       # install whole groups
+macstrap cli supabase,stripe  # install exact tools
+macstrap cli --list           # browse the catalog
+```
+
+Groups: `deploy` · `backend` · `database` · `cloud` · `kubernetes` · `infra` ·
+`security` · `ai` · `api` · `power-user`. See [`docs/SETUP.md`](docs/SETUP.md) for
+the full catalog.
+
+## See it in action
+
+Every demo is a scripted, non-mutating walkthrough — watch any of them yourself
+with `macstrap demo <name>` (it installs nothing):
+
+| Demo | Shows | Watch |
+| --- | --- | --- |
+| Setup preview | The dry-run plan before macstrap touches your machine | `macstrap demo` |
+| App picker | Choose exactly which GUI apps to install | `macstrap demo apps` |
+| CLI picker | Add project CLIs (Supabase, Stripe, AWS…) on demand | `macstrap demo cli` |
+| Doctor | Verify Homebrew, chezmoi, mise, runtimes, 1Password, signing | `macstrap demo doctor` |
+
+<div align="center">
+<img src=".github/assets/demo-doctor.gif" width="780" alt="macstrap doctor health check"/>
+</div>
+
+> The README GIFs are generated from [`demo/tapes/`](demo/tapes) with VHS, not
+> hand-recorded — see [`docs/DEMOS.md`](docs/DEMOS.md) to regenerate them.
 
 <details>
 <summary><b>Manual setup and advanced env vars</b></summary>
@@ -69,9 +103,13 @@ bash ~/Developer/workspaces/macstrap/scripts/bootstrap.sh
 
 The CLI just sets env vars, which agents and CI can pass directly:
 `MODE=minimal|default|interactive|headless|doctor`, `PROFILE=personal|work`,
-`APPS=0|default|interactive|a,b,c`, `DRY_RUN=1`. For example
+`APPS=0|default|interactive|a,b,c` (groups or keys from `brew/apps.catalog`),
+`DRY_RUN=1`. For example
 `PROFILE=work APPS=cursor,orbstack,tableplus bash scripts/bootstrap.sh`.
-See [`docs/AGENT-USAGE.md`](docs/AGENT-USAGE.md).
+
+Optional CLIs live in `brew/cli.catalog`; `macstrap cli …` installs them and
+records the selection in `brew/selected.cli`, which the installer replays on the
+next machine. See [`docs/AGENT-USAGE.md`](docs/AGENT-USAGE.md).
 
 </details>
 

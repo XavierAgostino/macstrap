@@ -1,0 +1,70 @@
+# macstrap CLI catalog.  key|formula|kind|categories|description
+# Optional, project-specific developer CLIs — DISCOVERY, not default install.
+# Nothing here is installed by the base bootstrap; you opt in with:
+#   macstrap cli                  pick interactively
+#   macstrap cli backend          install a category
+#   macstrap cli supabase,stripe  install exact tools
+# Selections are recorded in brew/selected.cli so a fresh Mac replays them.
+#
+# Shared 5-field schema with brew/apps.catalog:
+#   key         short stable handle (what you type / the picker shows)
+#   formula     the real Homebrew formula/cask (may differ from key, e.g. aws -> awscli)
+#   kind        brew | cask
+#   categories  comma-separated group tags (macstrap cli <category>)
+#   description one line
+#
+# RULE: nothing already in brew/Brewfile.core belongs here (CI enforces this).
+
+# --- deploy: ship frontends & apps ---
+vercel|vercel-cli|brew|deploy|Vercel deploy and project management
+netlify|netlify-cli|brew|deploy|Netlify deploy, dev, and site management
+fly|flyctl|brew|deploy|Fly.io app deploy and operations
+railway|railway|brew|deploy|Railway project and service management
+
+# --- backend: APIs, payments, local services ---
+supabase|supabase|brew|backend,database|Local Supabase, migrations, Edge Functions, types
+stripe|stripe-cli|brew|backend|Stripe webhooks, events, and API testing
+redis|redis|brew|backend,database|Redis server and redis-cli
+grpcurl|grpcurl|brew|backend,api|curl-like CLI for gRPC
+
+# --- database: clients & local analytics ---
+psql|libpq|brew|database|Postgres client tools (psql, pg_dump) without the server
+neon|neonctl|brew|database|Neon Postgres project and branch management
+duckdb|duckdb|brew|database|Local analytical SQL database
+
+# --- cloud ---
+aws|awscli|brew|cloud|AWS command-line interface
+cloudflared|cloudflared|brew|cloud|Cloudflare tunnel and network tooling
+
+# --- kubernetes ---
+kubectl|kubernetes-cli|brew|kubernetes|Kubernetes command-line interface
+helm|helm|brew|kubernetes|Kubernetes package manager
+k9s|k9s|brew|kubernetes|Terminal UI for Kubernetes clusters
+
+# --- infra: infrastructure as code (OpenTofu recommended) ---
+opentofu|opentofu|brew|infra|Open-source Terraform-compatible IaC
+terraform|terraform|brew|infra|HashiCorp infrastructure as code
+pulumi|pulumi|brew|infra|Infrastructure as code in general-purpose languages
+
+# --- security ---
+trivy|trivy|brew|security|Vulnerability scanner for containers, filesystems, repos
+sops|sops|brew|security|Encrypted secrets in YAML/JSON/env files
+age|age|brew|security|Simple, modern file encryption
+cosign|cosign|brew|security|Container signing and verification
+
+# --- ai: local models & terminal assistants ---
+ollama|ollama|brew|ai|Run local LLMs
+llm|llm|brew|ai|Simon Willison's LLM CLI
+aider|aider|brew|ai|AI pair programming in the terminal
+
+# --- api: HTTP clients & data wrangling ---
+httpie|httpie|brew|api|Human-friendly HTTP/API client
+yq|yq|brew|api|YAML/JSON/XML/TOML processor
+
+# --- power-user ---
+lazygit|lazygit|brew|power-user,git|Terminal UI for Git
+atuin|atuin|brew|power-user|Shell history sync and search
+direnv|direnv|brew|power-user|Directory-scoped environment variables
+hyperfine|hyperfine|brew|power-user|Command-line benchmarking
+watchexec|watchexec|brew|power-user|Run commands when files change
+just|just|brew|power-user|Command runner (project task shortcuts)
