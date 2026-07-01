@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
 #
-# Catalog hygiene, run in CI. Fails if:
+# Catalog hygiene. Fails if:
 #   - a catalog row is malformed (not 5 fields, empty key/formula, bad kind)
 #   - a catalog has duplicate keys
 #   - an optional CLI duplicates a package already in Brewfile.core
 #     (the catalog is for DISCOVERY; core is installed for everyone)
 #
+# With --online (requires Homebrew; run on macOS CI): also verify that every
+# formula/cask actually exists in Homebrew, catching entries like `terraform`
+# that were removed from homebrew-core.
+#
 set -euo pipefail
+
+ONLINE=0
+[[ "${1:-}" == "--online" ]] && ONLINE=1
 
 ROOT_DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CORE="$ROOT_DIR/brew/Brewfile.core"
@@ -41,6 +48,27 @@ if [[ -n "$dupes" ]]; then
   while IFS= read -r d; do
     [[ -n "$d" ]] && err "cli.catalog lists \"$d\", already in Brewfile.core"
   done <<<"$dupes"
+fi
+
+# 3. (--online) every formula/cask must resolve in Homebrew.
+if [[ "$ONLINE" -eq 1 ]]; then
+  if ! command -v brew >/dev/null 2>&1; then
+    err "--online requires Homebrew, but brew was not found"
+  else
+    for cat in "${CATALOGS[@]}"; do
+      echo "Resolving formulas in $(basename "$cat")..."
+      # shellcheck disable=SC2094  # $cat is only read; the >/dev/null writes are unrelated
+      while IFS='|' read -r key formula kind _; do
+        case "$key" in \#* | "") continue ;; esac
+        [[ -z "$formula" ]] && continue
+        if [[ "$kind" == "cask" ]]; then
+          brew info --cask "$formula" >/dev/null 2>&1 || err "$(basename "$cat"): cask \"$formula\" (key $key) does not resolve in Homebrew"
+        else
+          brew info --formula "$formula" >/dev/null 2>&1 || err "$(basename "$cat"): formula \"$formula\" (key $key) does not resolve in Homebrew"
+        fi
+      done <"$cat"
+    done
+  fi
 fi
 
 if [[ "$fail" -ne 0 ]]; then

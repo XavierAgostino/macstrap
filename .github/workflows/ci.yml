@@ -72,3 +72,11 @@ jobs:
             echo "== $f =="
             brew bundle list --file="$f" >/dev/null
           done
+
+  catalog:
+    name: Catalog formulas resolve
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Every apps/cli catalog entry must exist in Homebrew
+        run: bash scripts/check-catalog.sh --online

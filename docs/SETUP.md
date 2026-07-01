@@ -104,7 +104,7 @@ duplicates `Brewfile.core`.
 | `database` | psql (libpq) · neon · duckdb |
 | `cloud` | aws · cloudflared |
 | `kubernetes` | kubectl · helm · k9s |
-| `infra` | opentofu · terraform · pulumi |
+| `infra` | opentofu · pulumi |
 | `security` | trivy · sops · age · cosign |
 | `ai` | ollama · llm · aider |
 | `api` | httpie · yq |

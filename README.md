@@ -67,6 +67,10 @@ Groups: `deploy` · `backend` · `database` · `cloud` · `kubernetes` · `infra
 `security` · `ai` · `api` · `power-user`. See [`docs/SETUP.md`](docs/SETUP.md) for
 the full catalog.
 
+<div align="center">
+<img src=".github/assets/demo-cli.gif" width="780" alt="macstrap optional CLI picker"/>
+</div>
+
 ## See it in action
 
 Every demo is a scripted, non-mutating walkthrough — watch any of them yourself
