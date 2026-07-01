@@ -8,6 +8,10 @@ The `macstrap` CLI wraps these (`macstrap install --dry-run`,
 `macstrap doctor --json`, `macstrap install --headless`). Agents may use either
 the CLI or the env vars below; the env vars are the low-level interface.
 
+Structured, versioned output (doctor, apps/cli catalogs, report, security) is
+documented in [`JSON-CONTRACTS.md`](JSON-CONTRACTS.md) — the same contracts the
+Go TUI reads.
+
 ## Safe commands
 
 ```bash

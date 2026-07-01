@@ -23,13 +23,15 @@ Usage:
   macstrap install [--minimal|--headless] [--work|--personal]
                    [--apps|--no-apps] [--dry-run] [--verbose]
   macstrap apps [group|a,b,c]   pick GUI apps (interactive) or install a group/list
+                                (--list [--json] to browse the catalog)
   macstrap cli  [group|a,b,c]   install optional dev CLIs (interactive picker if no args)
+                                (--list [--json] to browse the catalog)
   macstrap doctor [--json|--fix]
   macstrap diff                 preview pending dotfile changes
   macstrap apply                apply dotfile changes
   macstrap update               pull the latest and apply
-  macstrap report               what macstrap manages on this machine
-  macstrap security             secrets / signing / auth posture
+  macstrap report [--json]      what macstrap manages on this machine
+  macstrap security [--json]    secrets / signing / auth posture
   macstrap demo [hero|apps|cli|doctor]   scripted walkthrough (installs nothing)
   macstrap uninstall [--apply]  back out managed dotfiles (dry-run by default)
   macstrap version
@@ -72,6 +74,15 @@ case "$cmd" in
     boot
     ;;
   apps)
+    # Read-only views (--list / --json / --dry-run / --help) go to apps.sh;
+    # anything else installs the selection through the bootstrap app phase.
+    for a in "$@"; do
+      case "$a" in
+        -l | --list | list | --json | --dry-run | -n | -h | --help)
+          exec bash "$ROOT_DIR/scripts/apps.sh" "$@"
+          ;;
+      esac
+    done
     if [[ $# -gt 0 ]]; then
       APPS="$(
         IFS=,
@@ -95,8 +106,8 @@ case "$cmd" in
     esac
     ;;
   doctor) bash "$ROOT_DIR/scripts/dev-doctor.sh" "$@" ;;
-  report) bash "$ROOT_DIR/scripts/report.sh" ;;
-  security) bash "$ROOT_DIR/scripts/security-check.sh" ;;
+  report) bash "$ROOT_DIR/scripts/report.sh" "$@" ;;
+  security) bash "$ROOT_DIR/scripts/security-check.sh" "$@" ;;
   uninstall) bash "$ROOT_DIR/scripts/uninstall.sh" "$@" ;;
   diff) chezmoi diff "$@" ;;
   apply) chezmoi apply "$@" ;;

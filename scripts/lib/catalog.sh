@@ -66,6 +66,29 @@ catalog_describe() {
   done
 }
 
+# Emit the whole catalog as a JSON array of records, in file order:
+#   [{"key","formula","kind","categories":[...],"description"}, ...]
+# Self-contained (escapes inline), so it needs no other lib. Consumed by
+# apps.sh / cli.sh --json and the Go TUI; see docs/JSON-CONTRACTS.md.
+#   catalog_json <catalog-file>
+catalog_json() {
+  awk -F'|' '
+    function esc(s){ gsub(/\\/,"\\\\",s); gsub(/"/,"\\\"",s); return s }
+    function trim(s){ gsub(/^[ \t]+|[ \t]+$/,"",s); return s }
+    BEGIN { printf "[" }
+    !/^[[:space:]]*#/ && NF >= 5 && $1 != "" {
+      cats = ""
+      n = split($4, a, ",")
+      for (i = 1; i <= n; i++) {
+        c = trim(a[i])
+        if (c != "") cats = cats (cats ? "," : "") "\"" esc(c) "\""
+      }
+      printf "%s{\"key\":\"%s\",\"formula\":\"%s\",\"kind\":\"%s\",\"categories\":[%s],\"description\":\"%s\"}",
+        (seen++ ? "," : ""), esc(trim($1)), esc(trim($2)), esc(trim($3)), cats, esc(trim($5))
+    }
+    END { printf "]" }' "$1"
+}
+
 # Expand a comma-separated selection of categories and/or keys to a newline
 # list of keys (categories expand to their members; unknown tokens pass through
 # as literal keys).
