@@ -36,8 +36,8 @@ type Catalog struct {
 	Schema     string        `json:"schema"`
 	Catalog    string        `json:"catalog"` // "apps" | "cli"
 	Categories []string      `json:"categories"`
-	Defaults   []string      `json:"defaults,omitempty"`  // apps only
-	Selected   []string      `json:"selected,omitempty"`  // cli only
+	Defaults   []string      `json:"defaults,omitempty"` // apps only
+	Selected   []string      `json:"selected,omitempty"` // cli only
 	Items      []CatalogItem `json:"items"`
 }
 
