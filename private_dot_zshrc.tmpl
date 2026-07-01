@@ -56,9 +56,10 @@ conda() {
 export _ZO_DOCTOR=0
 eval "$(zoxide init zsh --cmd cd)"
 
-# fzf: fuzzy finder
+# fzf: fuzzy finder (Vesper colors: lavender prompt, pink highlight, green marker)
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_DEFAULT_OPTS="--color=fg:#eeeeee,fg+:#ffffff,bg+:#1a1a1a,hl:#d996c8,hl+:#d996c8,pointer:#d996c8,marker:#8fb59c,prompt:#a8a0cc,info:#8a8a8a,border:#8f89aa,spinner:#e0b18f"
 source <(fzf --zsh)
 
 # ----------------------------------------------------------------------------

@@ -8,15 +8,22 @@ add_newline = false
 
 palette = "vesper"
 
+# Vesper color language (see docs/COLORS.md):
+#   lavender = paths/structure   pink = active accent/branch   green = success
+#   peach = docs/attention   red = errors   muted = metadata   fg = default text
 [palettes.vesper]
+bg = "#101010"
+fg = "#eeeeee"
+white = "#eeeeee"
+muted = "#8a8a8a"
+gray = "#8a8a8a"
 lavender = "#a8a0cc"
 lavender_dim = "#8f89aa"
 pink = "#d996c8"
+pink_dim = "#c892ab"
 green = "#8fb59c"
 peach = "#e0b18f"
 red = "#f4777f"
-gray = "#8a8a8a"
-white = "#eeeeee"
 
 [directory]
 style = "lavender"
@@ -28,17 +35,17 @@ read_only = " ro"
 read_only_style = "red"
 
 [git_branch]
-style = "#c3b3c4"
+style = "pink"
 format = "  [$branch]($style)"
 truncation_length = 28
 truncation_symbol = "…"
 
 [git_state]
-style = "#c3b3c4"
+style = "lavender_dim"
 format = " [$state( $progress_current/$progress_total)]($style)"
 
 [git_status]
-style = "#c3b3c4"
+style = "lavender_dim"
 format = "[$all_status$ahead_behind]($style)"
 conflicted = " !${count}"
 ahead = " ⇡${count}"
@@ -53,9 +60,9 @@ renamed = " »${count}"
 deleted = " -${count}"
 
 [character]
-success_symbol = "[❯](#c892ab)"
-error_symbol = "[❯](#c97a90)"
-vimcmd_symbol = "[❮](#c892ab)"
+success_symbol = "[❯](pink_dim)"
+error_symbol = "[❯](red)"
+vimcmd_symbol = "[❮](pink_dim)"
 
 [aws]
 disabled = true
@@ -87,7 +94,7 @@ disabled = true
 [cmd_duration]
 disabled = false
 min_time = 1200
-format = "  [${duration}](gray)"
+format = "  [${duration}](muted)"
 
 [time]
 disabled = true

@@ -200,6 +200,8 @@ symlinks, mise over nvm/pyenv, profiles over branches, and more.
 - [`docs/DECISIONS.md`](docs/DECISIONS.md): design rationale
 - [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md): fixes and recovery
 - [`docs/work-separation.md`](docs/work-separation.md): profiles, signing, compliance
+- [`docs/COLORS.md`](docs/COLORS.md): the Vesper color language
+- [`docs/adr/`](docs/adr/): architecture decision records
 
 ## License
 

@@ -10,6 +10,15 @@ All notable changes to macstrap are documented here. The format follows
 
 - Architecture Decision Records under `docs/adr/` (chezmoi, mise, profiles,
   1Password, split Brewfiles).
+- `docs/COLORS.md`: a semantic Vesper color language, applied consistently across
+  Starship, fzf, and the terminal palette.
+
+### Changed
+
+- Starship colors are now semantic (branch = pink, git status = dimmed lavender,
+  duration = muted); fzf themed to Vesper.
+- Ghostty default is opaque with no blur for readability; translucency and blur
+  are an opt-in "aesthetic mode".
 
 ## [0.4.0] - 2026-06-30
 
