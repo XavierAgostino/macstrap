@@ -42,8 +42,11 @@ helm|helm|brew|kubernetes|Kubernetes package manager
 k9s|k9s|brew|kubernetes|Terminal UI for Kubernetes clusters
 
 # --- infra: infrastructure as code (OpenTofu recommended) ---
-opentofu|opentofu|brew|infra|Open-source Terraform-compatible IaC
-terraform|terraform|brew|infra|HashiCorp infrastructure as code
+# NOTE: HashiCorp Terraform was removed from homebrew-core (BUSL license), so a
+# plain `terraform` formula no longer installs. OpenTofu is the open, drop-in,
+# Terraform-compatible replacement. If you specifically need HashiCorp Terraform:
+#   brew tap hashicorp/tap && brew install hashicorp/tap/terraform
+opentofu|opentofu|brew|infra|Open-source Terraform-compatible IaC (Terraform drop-in)
 pulumi|pulumi|brew|infra|Infrastructure as code in general-purpose languages
 
 # --- security ---
