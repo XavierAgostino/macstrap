@@ -44,10 +44,10 @@ func TestNewPickerPreselectsRecordedCLI(t *testing.T) {
 
 func TestToggleAndSelectionOrder(t *testing.T) {
 	p := newPicker("apps", sampleCatalog("apps")) // cursor pre-selected
-	p.down()                                       // -> ghostty
-	p.toggle()                                     // select ghostty
-	p.down()                                       // -> raycast
-	p.toggle()                                     // select raycast
+	p.down()                                      // -> ghostty
+	p.toggle()                                    // select ghostty
+	p.down()                                      // -> raycast
+	p.toggle()                                    // select raycast
 	// Selection must be in catalog order regardless of toggle order.
 	if got, want := p.selection(), "cursor,ghostty,raycast"; got != want {
 		t.Errorf("selection = %q, want %q", got, want)

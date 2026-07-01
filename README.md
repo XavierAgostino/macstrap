@@ -59,6 +59,24 @@ macstrap update               # pull the latest and apply
 macstrap diff                 # preview pending changes
 ```
 
+### The macstrap TUI
+
+Run `macstrap` with no arguments to open the interactive TUI — a dashboard over
+the same engine. Run **Doctor**, browse and install **Apps** / **CLI** with a
+multi-select, and review your **Report** and **Security** posture without
+memorizing flags:
+
+```bash
+macstrap            # interactive dashboard (TUI)
+macstrap doctor     # same engine, scriptable — add --json for machines
+```
+
+The TUI never reimplements setup: every screen renders the engine's
+[versioned JSON](docs/JSON-CONTRACTS.md) and hands the real work back to the
+scripts, so the CLI stays the scriptable, CI-friendly source of truth. It ships
+as a prebuilt binary (installed by the one-liner); if it's ever missing, the
+shell engine at `bin/macstrap` does everything the same way.
+
 > [!TIP]
 > Preview any run without touching your machine: `macstrap install --dry-run`.
 > Installs are quiet by default (each step's output is saved to a log and shown
