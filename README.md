@@ -62,9 +62,12 @@ macstrap diff                 # preview pending changes
 ### The macstrap TUI
 
 Run `macstrap` with no arguments to open the interactive TUI — a dashboard over
-the same engine. Run **Doctor**, browse and install **Apps** / **CLI** with a
-multi-select, review your **Report** and **Security** posture, and browse the
-**Logs** from your last run — all without memorizing flags:
+the same engine, with your machine's status and a suggested next step at a
+glance. Run **Doctor**, browse **Apps** / **CLI** in a searchable multi-select
+(`/` filters, a preview pane details the item under the cursor), review your
+**Report** and **Security** posture, read the **Logs** from your last run, and
+preview the **Install** plan — a streamed dry run; nothing changes until you
+confirm:
 
 ```bash
 macstrap            # interactive dashboard (TUI)
@@ -73,7 +76,7 @@ macstrap logs       # list captured step logs; `macstrap logs <name>` prints one
 ```
 
 <div align="center">
-<img src=".github/assets/demo-tui.gif" width="780" alt="macstrap interactive TUI — dashboard, doctor, app picker, report, security, logs"/>
+<img src=".github/assets/demo-tui.gif" width="780" alt="macstrap interactive TUI — dashboard, doctor, searchable app picker with preview, report, security, logs, install plan"/>
 </div>
 
 The TUI never reimplements setup: every screen renders the engine's

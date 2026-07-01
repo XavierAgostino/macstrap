@@ -2,7 +2,12 @@
 // internal/engine; no screen performs setup work itself.
 package tui
 
-import "github.com/charmbracelet/lipgloss"
+import (
+	"strings"
+
+	"github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/x/ansi"
+)
 
 // Palette — a Vesper-flavored scheme (warm peach accent on near-black), matching
 // the shell UI so the two layers feel like one product.
@@ -41,6 +46,73 @@ var (
 			BorderForeground(colorMuted).
 			Padding(0, 1)
 )
+
+// Row badges — short muted state words at the end of a list row
+// (installed / recommended / selected · missing …). Kept lowercase and
+// text-only to match the shell engine's status language.
+var (
+	badgeOK   = lipgloss.NewStyle().Foreground(colorOK)
+	badgeWarn = lipgloss.NewStyle().Foreground(colorWarn)
+	badgeMut  = lipgloss.NewStyle().Foreground(colorMuted)
+)
+
+// spinnerFrames animate loading states (braille dots, ~120ms per frame).
+var spinnerFrames = []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
+
+// spinnerFrame picks the frame for a tick counter.
+func spinnerFrame(tick int) string {
+	return spinnerFrames[tick%len(spinnerFrames)]
+}
+
+// titledPanel draws a rounded box of exactly width cells with the title set
+// into the top border — the detail that makes a region read as a pane instead
+// of indented text. Content is clipped/padded to the inner width; if height > 0
+// the body is padded to that many rows so side-by-side panels bottom-align.
+func titledPanel(title, body string, width, height int) string {
+	if width < 8 {
+		width = 8
+	}
+	inner := width - 4 // "│ " + " │"
+	lines := strings.Split(strings.TrimRight(body, "\n"), "\n")
+	if height > 0 {
+		for len(lines) < height {
+			lines = append(lines, "")
+		}
+	}
+
+	var b strings.Builder
+	// Top border with inline title: ╭─ Title ────╮
+	t := " " + title + " "
+	dashes := width - 3 - lipgloss.Width(t)
+	if dashes < 0 {
+		dashes = 0
+	}
+	b.WriteString(styleSubtle.Render("╭─") + styleGroup.Render(t) +
+		styleSubtle.Render(strings.Repeat("─", dashes)+"╮") + "\n")
+	for _, ln := range lines {
+		w := lipgloss.Width(ln)
+		if w > inner {
+			ln = truncate(ln, inner)
+			w = lipgloss.Width(ln)
+		}
+		pad := inner - w
+		if pad < 0 {
+			pad = 0
+		}
+		b.WriteString(styleSubtle.Render("│") + " " + ln + strings.Repeat(" ", pad) + " " + styleSubtle.Render("│") + "\n")
+	}
+	b.WriteString(styleSubtle.Render("╰" + strings.Repeat("─", width-2) + "╯"))
+	return b.String()
+}
+
+// truncate clips a styled line to max visible cells, appending an ellipsis.
+// ansi.Truncate is escape-aware, so it never cuts inside a color sequence.
+func truncate(s string, max int) string {
+	if lipgloss.Width(s) <= max {
+		return s
+	}
+	return ansi.Truncate(s, max-1, "…")
+}
 
 // levelStyle maps a contract level word (ok/warn/error) to its style.
 func levelStyle(level string) lipgloss.Style {

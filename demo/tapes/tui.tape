@@ -1,8 +1,10 @@
 # macstrap TUI demo — regenerate with:  vhs demo/tapes/tui.tape
 #
 # Records the REAL Bubble Tea TUI (cmd/macstrap) navigating its read-only
-# screens — dashboard, Doctor, the app picker, Report, Security, Logs.
-# Non-mutating: it never presses enter on a picker, so nothing is ever installed.
+# screens — dashboard, Doctor, the app picker (with / search), Report,
+# Security, Logs, and the Install plan preview. Non-mutating: pickers are
+# never confirmed and Install only shows the --dry-run plan, so nothing is
+# ever installed.
 #
 # The Hide block builds the binary to a temp dir and puts it first on PATH, so
 # `macstrap` resolves to the Go TUI (not the bash bin/macstrap fallback). It also
@@ -29,25 +31,31 @@ Type "printf 'Cloning dotfiles…\nApplying chezmoi state\nDone.\n' > $UI_LOG_DI
 Ctrl+L
 Show
 
-# Dashboard (cursor starts on Doctor).
+# Dashboard — status pane fills in as the report + background doctor land.
 Type "macstrap" Enter
-Sleep 3s
+Sleep 6s
 
-# Doctor — run the health check (shells out; hold for results), then back.
+# Doctor — the background run is cached, so results show instantly.
 Enter
-Sleep 7s
+Sleep 4s
 Escape
 Sleep 1s
 
-# Apps — open the multi-select and toggle a couple (never confirm).
+# Apps — multi-select with preview pane; toggle a couple, then / search.
 Down
 Enter
-Sleep 2s
+Sleep 2500ms
 Space
 Down
 Down
 Space
 Sleep 1500ms
+Type "/"
+Sleep 500ms
+Type "brow"
+Sleep 2s
+Escape
+Sleep 1200ms
 Escape
 Sleep 800ms
 
@@ -59,7 +67,7 @@ Sleep 4s
 Escape
 Sleep 1s
 
-# Security — posture summary.
+# Security — posture summary with suggested action.
 Down
 Enter
 Sleep 4s
@@ -76,6 +84,13 @@ Escape
 Sleep 1s
 Escape
 Sleep 800ms
+
+# Install — stream the dry-run plan (read-only; never confirm).
+Down
+Enter
+Sleep 4s
+Escape
+Sleep 1s
 
 # Quit.
 Type "q"
