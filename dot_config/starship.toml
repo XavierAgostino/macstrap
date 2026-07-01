@@ -13,8 +13,8 @@ palette = "vesper"
 #   peach = docs/attention   red = errors   muted = metadata   fg = default text
 [palettes.vesper]
 bg = "#101010"
-fg = "#eeeeee"
-white = "#eeeeee"
+fg = "#ffffff"
+white = "#ffffff"
 muted = "#8a8a8a"
 gray = "#8a8a8a"
 lavender = "#a8a0cc"

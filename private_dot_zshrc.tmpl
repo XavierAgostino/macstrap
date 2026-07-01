@@ -25,7 +25,8 @@ compinit -d "$ZSH_COMPDUMP"
 
 # ----------------------------------------------------------------------------
 # Autosuggestions (load before syntax-highlighting)
-# ----------------------------------------------------------------------------
+# Vesper muted (see docs/COLORS.md)
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#8a8a8a'
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # ----------------------------------------------------------------------------
@@ -59,7 +60,7 @@ eval "$(zoxide init zsh --cmd cd)"
 # fzf: fuzzy finder (Vesper colors: lavender prompt, pink highlight, green marker)
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_DEFAULT_OPTS="--color=fg:#eeeeee,fg+:#ffffff,bg+:#1a1a1a,hl:#d996c8,hl+:#d996c8,pointer:#d996c8,marker:#8fb59c,prompt:#a8a0cc,info:#8a8a8a,border:#8f89aa,spinner:#e0b18f"
+export FZF_DEFAULT_OPTS="--color=fg:#ffffff,fg+:#ffffff,bg+:#1a1a1a,hl:#d996c8,hl+:#d996c8,pointer:#d996c8,marker:#8fb59c,prompt:#a8a0cc,info:#8a8a8a,border:#8f89aa,spinner:#e0b18f"
 source <(fzf --zsh)
 
 # ----------------------------------------------------------------------------
@@ -80,5 +81,17 @@ eval "$(starship init zsh)"
 
 # ----------------------------------------------------------------------------
 # Syntax highlighting, MUST be sourced last
+# Vesper-aligned (see docs/COLORS.md)
 # ----------------------------------------------------------------------------
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern root line)
+typeset -A ZSH_HIGHLIGHT_STYLES
+ZSH_HIGHLIGHT_STYLES[command]='fg=#a8a0cc'
+ZSH_HIGHLIGHT_STYLES[alias]='fg=#d996c8'
+ZSH_HIGHLIGHT_STYLES[builtin]='fg=#d996c8'
+ZSH_HIGHLIGHT_STYLES[path]='fg=#a8a0cc,underline'
+ZSH_HIGHLIGHT_STYLES[globbing]='fg=#e0b18f'
+ZSH_HIGHLIGHT_STYLES[single-quoted-argument]='fg=#8fb59c'
+ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=#8fb59c'
+ZSH_HIGHLIGHT_STYLES[comment]='fg=#8a8a8a'
+ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=#f4777f,bold'
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
