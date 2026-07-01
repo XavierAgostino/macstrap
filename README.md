@@ -59,6 +59,43 @@ Full walkthrough: [`docs/SETUP.md`](docs/SETUP.md).
 > [!TIP]
 > Dry run: `macstrap install --dry-run`. Quiet by default — add `--verbose` for full output.
 
+## What's installed
+
+<p align="center"><strong>Core toolchain</strong> — chezmoi · mise · starship · ghostty · git · gh · eza · bat · fd · ripgrep · fzf · zoxide · jq · tmux · pnpm · uv · 1Password</p>
+
+<p align="center"><strong>Default apps</strong></p>
+
+<div align="center">
+<table>
+  <tr>
+    <td align="center" width="104"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/logos/cursor-dark.svg"><img src=".github/assets/logos/cursor.svg" height="36" alt="Cursor"/></picture><br/><sub><b>Cursor</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/vscode.svg" height="36" alt="VS Code"/><br/><sub><b>VS Code</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/claude.svg" height="36" alt="Claude Code"/><br/><sub><b>Claude Code</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/ghostty.svg" height="36" alt="Ghostty"/><br/><sub><b>Ghostty</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="104"><img src=".github/assets/logos/chrome.svg" height="36" alt="Chrome"/><br/><sub><b>Chrome</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/raycast.svg" height="36" alt="Raycast"/><br/><sub><b>Raycast</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/rectangle.png" height="36" alt="Rectangle"/><br/><sub><b>Rectangle</b></sub></td>
+    <td align="center" width="104"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/logos/onepassword-dark.svg"><img src=".github/assets/logos/onepassword.svg" height="36" alt="1Password"/></picture><br/><sub><b>1Password</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="104"><img src=".github/assets/logos/orbstack.png" height="36" alt="OrbStack"/><br/><sub><b>OrbStack</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/tableplus.png" height="36" alt="TablePlus"/><br/><sub><b>TablePlus</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/figma.svg" height="36" alt="Figma"/><br/><sub><b>Figma</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/slack.svg" height="36" alt="Slack"/><br/><sub><b>Slack</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="104"><img src=".github/assets/logos/zoom.svg" height="36" alt="Zoom"/><br/><sub><b>Zoom</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/notion.svg" height="36" alt="Notion"/><br/><sub><b>Notion</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/obsidian.svg" height="36" alt="Obsidian"/><br/><sub><b>Obsidian</b></sub></td>
+    <td align="center" width="104"><img src=".github/assets/logos/spotify.svg" height="36" alt="Spotify"/><br/><sub><b>Spotify</b></sub></td>
+  </tr>
+</table>
+</div>
+
+<p align="center">Customize via <code>brew/Brewfile.{core,apps,personal,work}</code> · full list in <a href="docs/SETUP.md#7-default-toolchain-and-apps">SETUP §7</a></p>
+
 ### The TUI
 
 Run `macstrap` with no arguments — dashboard, Doctor, searchable Apps/CLI pickers,
@@ -76,35 +113,55 @@ macstrap logs       # step logs from the last run
 
 ## See it in action
 
-Scripted walkthroughs — `macstrap demo <name>` installs nothing:
+<p align="center">Scripted walkthroughs — <code>macstrap demo &lt;name&gt;</code> installs nothing.</p>
 
-| Demo | Command |
-| --- | --- |
-| Setup preview | `macstrap demo` |
-| App picker | `macstrap demo apps` |
-| CLI picker | `macstrap demo cli` |
-| Doctor | `macstrap demo doctor` |
+<div align="center">
+<table>
+  <tr>
+    <th>Demo</th>
+    <th>Command</th>
+  </tr>
+  <tr>
+    <td align="center">Setup preview</td>
+    <td align="center"><code>macstrap demo</code></td>
+  </tr>
+  <tr>
+    <td align="center">App picker</td>
+    <td align="center"><code>macstrap demo apps</code></td>
+  </tr>
+  <tr>
+    <td align="center">CLI picker</td>
+    <td align="center"><code>macstrap demo cli</code></td>
+  </tr>
+  <tr>
+    <td align="center">Doctor</td>
+    <td align="center"><code>macstrap demo doctor</code></td>
+  </tr>
+</table>
+</div>
 
-**App picker**
+<p align="center"><strong>App picker</strong></p>
 
 <div align="center">
 <img src=".github/assets/demo-apps.gif" width="780" alt="macstrap interactive app picker"/>
 </div>
 
-**CLI picker**
+<p align="center"><strong>CLI picker</strong></p>
 
 <div align="center">
 <img src=".github/assets/demo-cli.gif" width="780" alt="macstrap optional CLI picker"/>
 </div>
 
-**Doctor**
+<p align="center"><strong>Doctor</strong></p>
 
 <div align="center">
 <img src=".github/assets/demo-doctor.gif" width="780" alt="macstrap doctor health check"/>
 </div>
 
-CLI catalog (groups and install commands): [`docs/SETUP.md` §6](docs/SETUP.md#6-optional-clis-per-project-not-per-machine).
-Regenerate GIFs: [`docs/DEMOS.md`](docs/DEMOS.md).
+<p align="center">
+CLI catalog: <a href="docs/SETUP.md#6-optional-clis-per-project-not-per-machine">SETUP §6</a> ·
+Regenerate GIFs: <a href="docs/DEMOS.md">DEMOS.md</a>
+</p>
 
 <details>
 <summary><b>Manual setup and env vars</b></summary>
@@ -153,13 +210,34 @@ macstrap uninstall     # dry-run back-out (--apply to perform)
 
 ## Documentation
 
-| If you… | Start here |
-| --- | --- |
-| Just installed | [`docs/SETUP.md`](docs/SETUP.md) |
-| Work laptop | [`docs/work-separation.md`](docs/work-separation.md) |
-| Fork / customize | [`docs/README.md`](docs/README.md) |
-| Automate / agent | [`docs/AGENT-USAGE.md`](docs/AGENT-USAGE.md) |
-| Something broke | [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) |
+<div align="center">
+<table>
+  <tr>
+    <th>If you…</th>
+    <th>Start here</th>
+  </tr>
+  <tr>
+    <td align="center">Just installed</td>
+    <td align="center"><a href="docs/SETUP.md">SETUP.md</a></td>
+  </tr>
+  <tr>
+    <td align="center">Work laptop</td>
+    <td align="center"><a href="docs/work-separation.md">work-separation.md</a></td>
+  </tr>
+  <tr>
+    <td align="center">Fork / customize</td>
+    <td align="center"><a href="docs/README.md">docs/README.md</a></td>
+  </tr>
+  <tr>
+    <td align="center">Automate / agent</td>
+    <td align="center"><a href="docs/AGENT-USAGE.md">AGENT-USAGE.md</a></td>
+  </tr>
+  <tr>
+    <td align="center">Something broke</td>
+    <td align="center"><a href="docs/TROUBLESHOOTING.md">TROUBLESHOOTING.md</a></td>
+  </tr>
+</table>
+</div>
 
 ## License
 
