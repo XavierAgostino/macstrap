@@ -41,23 +41,11 @@ CLI_SELECTED="$DOTFILES_DIR/brew/selected.cli"
 WARNINGS=()
 SELECTED_APPS=""
 
-# shared catalog helpers (catalog_keys / catalog_emit / catalog_resolve / ...)
+# shared UI helpers (log / ok / warn / die / run_logged) + catalog helpers
+# shellcheck source=scripts/lib/ui.sh
+. "$DOTFILES_DIR/scripts/lib/ui.sh"
 # shellcheck source=scripts/lib/catalog.sh
 . "$DOTFILES_DIR/scripts/lib/catalog.sh"
-
-# --- output helpers (colored text labels, no emoji) ---
-b=$'\033[1;34m'
-g=$'\033[32m'
-y=$'\033[33m'
-r=$'\033[31m'
-x=$'\033[0m'
-log() { printf '\n%s==>%s %s\n' "$b" "$x" "$*"; }
-ok() { printf '  %sok%s   %s\n' "$g" "$x" "$*"; }
-warn() { printf '  %swarn%s %s\n' "$y" "$x" "$*"; }
-die() {
-  printf '  %sfail%s %s\n' "$r" "$x" "$*"
-  exit 1
-}
 
 # run a REQUIRED step; abort on failure
 run_required() {
@@ -70,6 +58,23 @@ run_optional() {
   local d="$1"
   shift
   if "$@"; then ok "$d"; else
+    warn "$d (continued)"
+    WARNINGS+=("$d")
+  fi
+}
+
+# Same as above, but for long, NON-INTERACTIVE steps (brew bundle / mise): route
+# through run_logged so output is captured to a log and streamed only under
+# --verbose. Never use these for commands that may prompt (chezmoi, Homebrew).
+run_required_logged() {
+  local d="$1"
+  shift
+  if run_logged "$d" "$@"; then ok "$d"; else die "$d"; fi
+}
+run_optional_logged() {
+  local d="$1"
+  shift
+  if run_logged "$d" "$@"; then ok "$d"; else
     warn "$d (continued)"
     WARNINGS+=("$d")
   fi
@@ -106,7 +111,7 @@ install_apps() {
   local count
   count="$(apps_count)"
   if [[ "${count:-0}" -eq 0 ]]; then
-    log "Apps: none"
+    skip "No apps selected"
     return 0
   fi
   local gen="$DOTFILES_DIR/brew/generated"
@@ -116,17 +121,26 @@ install_apps() {
     # shellcheck disable=SC2046  # keys are single words; word-splitting is intended
     catalog_emit "$APPS_CATALOG" $(printf '%s\n' "$SELECTED_APPS" | sed '/^$/d')
   } >"$gen/Brewfile.apps.local"
-  run_optional "Installing $count app(s)" brew bundle --file="$gen/Brewfile.apps.local"
+  # Show what's being installed first, so a long Homebrew run never feels frozen.
+  # shellcheck disable=SC2046  # keys are single words; word-splitting is intended
+  catalog_describe "$APPS_CATALOG" $(printf '%s\n' "$SELECTED_APPS" | sed '/^$/d')
+  run_optional_logged "Installing $count app(s)" brew bundle --file="$gen/Brewfile.apps.local"
 }
 
 # Replay previously selected optional CLIs (brew/selected.cli), so a fresh Mac
 # rebuilds the same CLI stack. Recorded by `macstrap cli`. No-op when absent.
 install_selected_cli() {
-  [[ -f "$CLI_SELECTED" ]] || return 0
+  if [[ ! -f "$CLI_SELECTED" ]]; then
+    skip "None recorded yet (add some with: macstrap cli)"
+    return 0
+  fi
   local keys count
   keys="$(sed 's/#.*//; s/[[:space:]]//g; /^$/d' "$CLI_SELECTED")"
   count="$(printf '%s\n' "$keys" | sed '/^$/d' | grep -c . || true)"
-  [[ "${count:-0}" -eq 0 ]] && return 0
+  if [[ "${count:-0}" -eq 0 ]]; then
+    skip "None recorded yet (add some with: macstrap cli)"
+    return 0
+  fi
   local gen="$DOTFILES_DIR/brew/generated"
   mkdir -p "$gen"
   {
@@ -134,7 +148,9 @@ install_selected_cli() {
     # shellcheck disable=SC2046  # keys are single words; word-splitting is intended
     catalog_emit "$CLI_CATALOG" $(printf '%s\n' "$keys")
   } >"$gen/Brewfile.cli.local"
-  run_optional "Installing $count recorded CLI(s)" brew bundle --file="$gen/Brewfile.cli.local"
+  # shellcheck disable=SC2046  # keys are single words; word-splitting is intended
+  catalog_describe "$CLI_CATALOG" $(printf '%s\n' "$keys")
+  run_optional_logged "Replaying $count recorded CLI(s)" brew bundle --file="$gen/Brewfile.cli.local"
 }
 
 print_plan() {
@@ -164,49 +180,81 @@ if [[ "$DRY_RUN" == "1" ]]; then
 fi
 
 log "macstrap installer (mode: $MODE)"
+# Step-based progress: ten honest phases, no fake percentage bar. Noisy phases
+# (brew/mise) run quiet-by-default and stream under --verbose; interactive
+# phases (Homebrew installer, chezmoi) always stream so a prompt is never hidden.
+ui_phase_total 10
 
-# 1. Homebrew
-command -v brew >/dev/null 2>&1 ||
+# 1. Preflight
+ui_phase "Preflight checks"
+[[ "$(uname -s)" == "Darwin" ]] || die "macstrap supports macOS only (found $(uname -s))"
+ok "macOS $(sw_vers -productVersion 2>/dev/null || echo '?') on $(uname -m)"
+
+# 2. Homebrew
+ui_phase "Homebrew"
+if command -v brew >/dev/null 2>&1; then
+  ok "Already installed"
+else
   run_required "Installing Homebrew" /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
 [[ -x /opt/homebrew/bin/brew ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# 2. Clone the repo if missing
-[[ -d "$DOTFILES_DIR/.git" ]] || run_required "Cloning $REPO_SLUG" git clone "$REPO_URL" "$DOTFILES_DIR"
+# 3. Repository
+ui_phase "Repository"
+if [[ -d "$DOTFILES_DIR/.git" ]]; then
+  ok "Present at $DOTFILES_DIR"
+else
+  run_required "Cloning $REPO_SLUG" git clone "$REPO_URL" "$DOTFILES_DIR"
+fi
 
-# 3. chezmoi + secret-scan hook
+# 4. Dotfiles (chezmoi). Streams: init may prompt for the profile on first run.
+ui_phase "Dotfiles"
 command -v chezmoi >/dev/null 2>&1 || run_required "Installing chezmoi" brew install chezmoi
 run_optional "Enabling the gitleaks pre-commit hook" git -C "$DOTFILES_DIR" config core.hooksPath scripts/hooks
 run_optional "Linking the macstrap CLI (~/.local/bin/macstrap)" link_cli
-
-# 4. chezmoi init + apply
 run_required "chezmoi init" chezmoi init --source="$DOTFILES_DIR"
-log "Preview (chezmoi diff):"
-chezmoi diff || true
+[[ "$VERBOSE" == "1" ]] && {
+  log "Preview (chezmoi diff):"
+  chezmoi diff || true
+}
 run_required "chezmoi apply" chezmoi apply
 
 # 5. Runtimes
+ui_phase "Runtimes"
 command -v mise >/dev/null 2>&1 || run_required "Installing mise" brew install mise
-run_optional "Installing runtimes (mise)" mise install
+run_optional_logged "Installing runtimes (mise)" mise install
 
-# 6. Homebrew packages: core, then apps, recorded CLIs, then the active profile
-run_required "Installing core packages" brew bundle --file="$DOTFILES_DIR/brew/Brewfile.core"
+# 6. Core tools
+ui_phase "Core tools"
+run_required_logged "Installing core packages" brew bundle --file="$DOTFILES_DIR/brew/Brewfile.core"
+
+# 7. Apps
+ui_phase "Apps"
 install_apps
+
+# 8. Project CLIs (replay recorded selections; see macstrap cli)
+ui_phase "Project CLIs"
 install_selected_cli
+
+# 9. Profile packages
+ui_phase "Profile packages"
 [[ -z "$PROFILE" ]] && PROFILE="$(chezmoi execute-template '{{ .profile }}' 2>/dev/null || true)"
 case "$PROFILE" in
-  personal) run_optional "Installing personal packages" brew bundle --file="$DOTFILES_DIR/brew/Brewfile.personal" ;;
-  work) run_optional "Installing work packages" brew bundle --file="$DOTFILES_DIR/brew/Brewfile.work" ;;
+  personal) run_optional_logged "Installing personal packages" brew bundle --file="$DOTFILES_DIR/brew/Brewfile.personal" ;;
+  work) run_optional_logged "Installing work packages" brew bundle --file="$DOTFILES_DIR/brew/Brewfile.work" ;;
+  *) skip "No profile selected yet" ;;
 esac
 
-# 7. Health check
-run_optional "Running dev-doctor" bash "$DOTFILES_DIR/scripts/dev-doctor.sh"
+# 10. Doctor (streams its own report — never hidden behind a spinner)
+ui_phase "Doctor"
+bash "$DOTFILES_DIR/scripts/dev-doctor.sh" || WARNINGS+=("dev-doctor reported issues")
 
-# 8. Summary
+# Summary
 if [[ ${#WARNINGS[@]} -eq 0 ]]; then
-  log "Bootstrap complete with no warnings."
+  printf '\n  %sYour Mac is ready.%s\n' "$g" "$x"
 else
-  log "Bootstrap completed with ${#WARNINGS[@]} warning(s):"
+  log "Completed with ${#WARNINGS[@]} warning(s):"
   for w in "${WARNINGS[@]}"; do warn "$w"; done
-  echo "  Re-check with: bash scripts/dev-doctor.sh"
+  muted "Re-check with: macstrap doctor"
 fi
-echo "  Open a new terminal (or run 'exec zsh') to load the shell."
+muted "Open a new terminal (or run 'exec zsh') to load the shell."

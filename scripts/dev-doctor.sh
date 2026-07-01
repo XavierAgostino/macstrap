@@ -135,3 +135,4 @@ echo
 echo "-- Next --"
 printf '  %-22s %s\n' "macstrap cli backend" "Add Supabase, Stripe, Postgres tools"
 printf '  %-22s %s\n' "macstrap apps" "Pick optional GUI apps"
+printf '  %-22s %s\n' "macstrap update" "Pull the latest macstrap changes"

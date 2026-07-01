@@ -61,7 +61,9 @@ macstrap diff                 # preview pending changes
 
 > [!TIP]
 > Preview any run without touching your machine: `macstrap install --dry-run`.
-> Run `macstrap help` for the full command list.
+> Installs are quiet by default (each step's output is saved to a log and shown
+> only on failure) — add `--verbose` to stream everything. Run `macstrap help`
+> for the full command list.
 
 `macstrap apps` (and `macstrap install --apps`) let you pick exactly what to install:
 
@@ -103,8 +105,8 @@ with `macstrap demo <name>` (it installs nothing):
 <img src=".github/assets/demo-doctor.gif" width="780" alt="macstrap doctor health check"/>
 </div>
 
-> The README GIFs are generated from [`demo/tapes/`](demo/tapes) with VHS, not
-> hand-recorded — see [`docs/DEMOS.md`](docs/DEMOS.md) to regenerate them.
+> README GIFs are generated from [`demo/tapes/`](demo/tapes) with VHS. See
+> [`docs/DEMOS.md`](docs/DEMOS.md) to regenerate them.
 
 <details>
 <summary><b>Manual setup and advanced env vars</b></summary>

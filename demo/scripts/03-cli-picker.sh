@@ -12,23 +12,21 @@ title "macstrap cli" "Core stays lean — pull in project CLIs when you need the
 nap 0.8
 
 prompt "macstrap cli backend,ai"
-muted "Resolving groups: backend, ai"
-nap 0.6
+nap 0.4
 
-section "Installing 7 CLI(s):"
-printf '  - supabase\n  - stripe\n  - redis\n  - grpcurl\n  - ollama\n  - llm\n  - aider\n'
+section "Installing 7 project CLI(s)"
+desc_row "supabase" "Local Supabase, migrations, Edge Functions, types"
+desc_row "stripe" "Stripe webhooks, events, and API testing"
+desc_row "redis" "Redis server and redis-cli"
+desc_row "grpcurl" "curl-like CLI for gRPC"
+desc_row "ollama" "Run local LLMs"
+desc_row "llm" "Simon Willison's LLM CLI"
+desc_row "aider" "AI pair programming in the terminal"
 nap 1
-row_ok "supabase"
-row_ok "stripe-cli"
-row_ok "redis"
-row_ok "grpcurl"
-row_ok "ollama"
-row_ok "llm"
-row_ok "aider"
-nap 0.9
-
-section "Recorded selection in brew/selected.cli"
-muted "  Replayed on a fresh Mac by the installer (macstrap install)."
+for t in supabase stripe redis grpcurl ollama llm aider; do ok_line "$t"; done
+nap 0.5
+ok_line "Recorded in brew/selected.cli"
+muted "Replayed automatically on your next Mac."
 nap 1
 
 muted ""
