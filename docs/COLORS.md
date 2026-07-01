@@ -11,20 +11,21 @@ colors but a language: each color means one thing everywhere (prompt, `eza`,
 | --- | --- | --- |
 | `lavender` | `#a8a0cc` | Paths, directories, structure ("where am I") |
 | `lavender_dim` | `#8f89aa` | Secondary structure (git status detail, borders) |
-| `pink` | `#d996c8` | Active accent, current git branch ("what state") |
-| `pink_dim` | `#c892ab` | Prompt character, focus |
+| `pink` | `#d996c8` | Active accent (fzf highlight, selection) |
+| `pink_dim` | `#c892ab` | Prompt character, the single point of focus |
 | `green` | `#8fb59c` | Success, installed, healthy |
 | `peach` | `#e0b18f` | Docs, warnings, human attention |
 | `red` | `#f4777f` | Errors, failed checks, destructive actions |
-| `muted` | `#8a8a8a` | Metadata, durations, inactive text |
+| `muted` | `#8a8a8a` | Git branch and metadata (ambient context), durations |
 | `fg` | `#eeeeee` | Normal, readable text |
 | `bg` | `#101010` | Background |
 
 ## Where it is applied
 
-- **Starship** (`dot_config/starship.toml`): `directory = lavender`,
-  `git_branch = pink`, `git_status = lavender_dim`, prompt `= pink_dim`,
-  errors `= red`, `cmd_duration = muted`.
+- **Starship** (`dot_config/starship.toml`): `directory = lavender` (leads),
+  `git_branch = muted` and `git_status = lavender_dim` (ambient git context),
+  prompt `= pink_dim` (the one accent), errors `= red`, `cmd_duration = muted`.
+  The path leads; git recedes.
 - **fzf** (`FZF_DEFAULT_OPTS`): lavender prompt, pink highlight/pointer, green
   marker, muted info.
 - **Ghostty** (`dot_config/ghostty/config`): `theme = Vesper` sets the ANSI

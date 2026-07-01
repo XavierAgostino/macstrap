@@ -35,7 +35,7 @@ read_only = " ro"
 read_only_style = "red"
 
 [git_branch]
-style = "pink"
+style = "muted"
 format = "  [$branch]($style)"
 truncation_length = 28
 truncation_symbol = "…"
