@@ -19,6 +19,8 @@ const (
 	screenDoctor
 	screenReport
 	screenSecurity
+	screenApps
+	screenCLI
 )
 
 // menuItem is one action on the dashboard.
@@ -49,6 +51,7 @@ type model struct {
 	report   *engine.Report
 	doctor   *engine.Doctor
 	security *engine.Security
+	pk       *picker // active app/cli multi-select, nil otherwise
 
 	loading bool
 	err     error
@@ -70,6 +73,10 @@ func (m model) Init() tea.Cmd {
 type reportMsg struct{ r *engine.Report }
 type doctorMsg struct{ d *engine.Doctor }
 type securityMsg struct{ s *engine.Security }
+type catalogMsg struct {
+	kind string
+	c    *engine.Catalog
+}
 type errMsg struct{ err error }
 
 func (e errMsg) Error() string { return e.err.Error() }
@@ -112,6 +119,26 @@ func loadSecurity(eng *engine.Engine) tea.Cmd {
 	}
 }
 
+func loadCatalog(eng *engine.Engine, kind string) tea.Cmd {
+	return func() tea.Msg {
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+		var (
+			c   *engine.Catalog
+			err error
+		)
+		if kind == "cli" {
+			c, err = eng.CLICatalog(ctx)
+		} else {
+			c, err = eng.AppsCatalog(ctx)
+		}
+		if err != nil {
+			return errMsg{err}
+		}
+		return catalogMsg{kind: kind, c: c}
+	}
+}
+
 // runShell suspends the TUI and hands control to the bash entrypoint. This is
 // how the app defers real work (install, app/cli install) to the scripts.
 func runShell(eng *engine.Engine, args ...string) tea.Cmd {
@@ -146,7 +173,14 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.security = msg.s
 		m.loading = false
 		return m, nil
+	case catalogMsg:
+		m.pk = newPicker(msg.kind, msg.c)
+		m.loading = false
+		return m, nil
 	case reloadMsg:
+		// After the shell hands control back, return home and refresh the summary.
+		m.screen = screenDashboard
+		m.pk = nil
 		return m, loadReport(m.eng)
 	case errMsg:
 		m.err = msg.err
@@ -164,6 +198,11 @@ func (m model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	switch msg.String() {
 	case "ctrl+c":
 		return m, tea.Quit
+	}
+
+	// Picker screens have their own keymap (space toggles, enter installs).
+	if (m.screen == screenApps || m.screen == screenCLI) && m.pk != nil {
+		return m.handlePickerKey(msg)
 	}
 
 	if m.screen != screenDashboard {
@@ -210,12 +249,44 @@ func (m model) activate(key string) (tea.Model, tea.Cmd) {
 		m.screen = screenSecurity
 		m.loading = true
 		return m, loadSecurity(m.eng)
+	case "apps":
+		m.screen = screenApps
+		m.pk = nil
+		m.loading = true
+		return m, loadCatalog(m.eng, "apps")
+	case "cli":
+		m.screen = screenCLI
+		m.pk = nil
+		m.loading = true
+		return m, loadCatalog(m.eng, "cli")
 	case "install":
 		return m, runShell(m.eng, "install", "--dry-run")
-	case "apps":
-		return m, runShell(m.eng, "apps", "--list")
-	case "cli":
-		return m, runShell(m.eng, "cli", "--list")
+	}
+	return m, nil
+}
+
+// handlePickerKey drives an app/cli multi-select. Confirming hands the chosen
+// keys to the shell installer; the TUI performs no installation itself.
+func (m model) handlePickerKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
+	switch msg.String() {
+	case "esc", "backspace", "left", "h", "q":
+		m.screen = screenDashboard
+		m.pk = nil
+		m.err = nil
+	case "up", "k":
+		m.pk.up()
+	case "down", "j":
+		m.pk.down()
+	case " ", "x":
+		m.pk.toggle()
+	case "d":
+		if sel := m.pk.selection(); sel != "" {
+			return m, runShell(m.eng, m.pk.kind, sel, "--dry-run")
+		}
+	case "enter":
+		if sel := m.pk.selection(); sel != "" {
+			return m, runShell(m.eng, m.pk.kind, sel)
+		}
 	}
 	return m, nil
 }
@@ -230,18 +301,32 @@ func (m model) View() string {
 		return m.frame("Report", m.viewReport())
 	case screenSecurity:
 		return m.frame("Security", m.viewSecurity())
+	case screenApps:
+		return m.frame("Apps", m.viewPicker())
+	case screenCLI:
+		return m.frame("CLI", m.viewPicker())
 	default:
 		return m.frame("macstrap", m.viewDashboard())
 	}
+}
+
+func (m model) viewPicker() string {
+	if m.loading || m.pk == nil {
+		return styleSubtle.Render("loading catalog…")
+	}
+	return m.pk.view()
 }
 
 // frame wraps body content with a title header and a help footer.
 func (m model) frame(title, body string) string {
 	head := styleTitle.Render("macstrap") + styleSubtle.Render("  ·  "+title)
 	var help string
-	if m.screen == screenDashboard {
+	switch m.screen {
+	case screenDashboard:
 		help = styleHelp.Render("↑/↓ move · enter select · q quit")
-	} else {
+	case screenApps, screenCLI:
+		help = styleHelp.Render("↑/↓ move · space toggle · enter install · d preview · esc back")
+	default:
 		help = styleHelp.Render("esc back · ctrl+c quit")
 	}
 	if m.err != nil {
