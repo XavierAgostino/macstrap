@@ -4,11 +4,13 @@
 
 **"config file template has changed, run chezmoi init to regenerate"**
 A harmless warning after editing `.chezmoi.toml.tmpl`. Regenerate:
+
 ```bash
 chezmoi init --source="$HOME/Developer/workspaces/macstrap"
 ```
 
 **`chezmoi verify` reports drift, or a managed file changed unexpectedly**
+
 ```bash
 chezmoi diff            # see what differs
 chezmoi apply           # re-apply source to $HOME (source wins)
@@ -23,10 +25,12 @@ clearing the relevant `[data]` keys.
 
 **A new shell errors, or a tool is not found**
 Open a fresh login shell and check resolution:
+
 ```bash
 exec zsh
 doctor
 ```
+
 `node` and `npm` come from mise. Confirm with `mise ls` and `mise doctor`.
 
 **`grep` behaves oddly in the terminal**
@@ -62,6 +66,7 @@ set `workEmail` and `workDir` in chezmoi config (see
 ## Full reset
 
 Everything is reproducible. To rebuild from scratch:
+
 ```bash
 bash ~/Developer/workspaces/macstrap/scripts/bootstrap.sh
 ```
@@ -72,6 +77,7 @@ Preview any run first with `DRY_RUN=1`, and check machine state with
 ## Restore a single dotfile
 
 Managed files come from the source, so:
+
 ```bash
 chezmoi apply ~/.zshrc      # restore one file from the source
 ```

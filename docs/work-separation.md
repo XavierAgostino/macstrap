@@ -9,7 +9,7 @@ and the guardrails to respect on a company-issued laptop.
 That single choice drives everything machine-specific:
 
 | Data var | personal machine | work machine |
-|---|---|---|
+| --- | --- | --- |
 | `profile` | `personal` | `work` |
 | `email` | personal email | work email |
 | `signingKey` | empty (off) | work SSH signing key (optional) |
@@ -36,32 +36,39 @@ professional repos. It is off until you set a key. To enable it, with 1Password:
    SSH agent". This is required, because `op-ssh-sign` reaches the key through
    the agent.
 2. **Create the signing key** (CLI or app). CLI:
+
    ```bash
    op item create --category="SSH Key" --title="Git Commit Signing" \
      --vault="<your vault>" --ssh-generate-key=ed25519
    op read "op://<your vault>/Git Commit Signing/public key"
    ```
+
    On a work machine, use the company vault.
 3. **Make sure the agent serves the key.** The agent enables only the `Private`
    vault by default. If the key is in another vault, add it to
    `~/.config/1Password/ssh/agent.toml`, above the `Private` entry:
+
    ```toml
    [[ssh-keys]]
    item = "Git Commit Signing"
    vault = "<your vault>"
    ```
+
    Verify with
    `SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock ssh-add -l`;
    the key should be listed.
 4. **Turn on signing** in chezmoi and apply:
+
    ```bash
    chezmoi edit-config        # set signingKey = "ssh-ed25519 AAAA..."
    chezmoi apply
    ```
+
    This sets `gpg.format=ssh`, `commit.gpgsign=true`, `op-ssh-sign` as the
    signer, and an `allowed_signers` file for local verification.
 5. **Register on GitHub.** Add the public key as a Signing key at
-   https://github.com/settings/ssh/new (key type Signing), or via CLI:
+   <https://github.com/settings/ssh/new> (key type Signing), or via CLI:
+
    ```bash
    gh auth refresh -h github.com -s admin:ssh_signing_key
    echo "<public key>" | gh ssh-key add - --type signing --title "Git Commit Signing"

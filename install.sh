@@ -25,10 +25,13 @@ EOF
 if [[ "$NONINTERACTIVE" != "1" ]]; then
   printf "Continue? [y/N] "
   read -r reply </dev/tty || reply="n"
-  [[ "$reply" =~ ^[Yy]$ ]] || { echo "Aborted."; exit 1; }
+  [[ "$reply" =~ ^[Yy]$ ]] || {
+    echo "Aborted."
+    exit 1
+  }
 fi
 
-command -v brew >/dev/null 2>&1 || \
+command -v brew >/dev/null 2>&1 ||
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 [[ -x /opt/homebrew/bin/brew ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
 

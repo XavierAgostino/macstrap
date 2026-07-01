@@ -6,15 +6,37 @@ on:
   pull_request:
 
 jobs:
-  shellcheck:
-    name: Shellcheck scripts
+  lint:
+    name: Lint (shell + actions)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install shellcheck
-        run: sudo apt-get update && sudo apt-get install -y shellcheck
-      - name: Lint
-        run: shellcheck scripts/*.sh scripts/hooks/pre-commit install.sh
+      - name: shellcheck
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y shellcheck
+          shellcheck bin/macstrap scripts/*.sh scripts/hooks/pre-commit install.sh
+      - name: shfmt
+        run: |
+          curl -fsSL -o /tmp/shfmt https://github.com/mvdan/sh/releases/download/v3.13.1/shfmt_v3.13.1_linux_amd64
+          chmod +x /tmp/shfmt
+          /tmp/shfmt -i 2 -ci -d bin/macstrap scripts/*.sh scripts/hooks/pre-commit install.sh
+      - name: actionlint
+        run: |
+          curl -fsSL -o download-actionlint.bash \
+            https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash
+          bash download-actionlint.bash
+          ./actionlint -color
+
+  markdown:
+    name: Markdownlint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install -g markdownlint-cli
+      - run: markdownlint README.md CHANGELOG.md docs/*.md ai/*.md
 
   render:
     name: chezmoi render (${{ matrix.profile }})

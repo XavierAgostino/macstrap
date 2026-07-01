@@ -5,7 +5,9 @@
 set -uo pipefail
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/Developer/workspaces/macstrap}"
 
-g=$'\033[32m'; y=$'\033[33m'; x=$'\033[0m'
+g=$'\033[32m'
+y=$'\033[33m'
+x=$'\033[0m'
 row() { printf '  %-24s %s%s%s\n' "$1" "$2" "$3" "$x"; }
 good() { row "$1" "$g" "$2"; }
 warn() { row "$1" "$y" "$2"; }

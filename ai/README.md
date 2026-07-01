@@ -5,7 +5,7 @@ Repo-only (chezmoi does not apply these to `$HOME`): deploy deliberately so you
 never clobber an existing `~/.claude/CLAUDE.md`. **Customize them to your style.**
 
 | File | Purpose | Deploy to |
-|---|---|---|
+| --- | --- | --- |
 | `engineering-practices.md` | Portable "how I engineer" layer, the source the others derive from. | (reference) |
 | `CLAUDE.example.md` | Self-contained global instructions example. | `~/.claude/CLAUDE.md` |
 | `AGENTS.md` | Tool-agnostic conventions for Codex/Cursor/other agents. | repo root or `~/.codex/AGENTS.md` |

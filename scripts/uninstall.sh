@@ -14,9 +14,12 @@ DOTFILES_DIR="${DOTFILES_DIR:-$HOME/Developer/workspaces/macstrap}"
 APPLY=0
 for a in "$@"; do
   case "$a" in
-    --apply)   APPLY=1 ;;
+    --apply) APPLY=1 ;;
     --dry-run) APPLY=0 ;;
-    *) echo "usage: uninstall.sh [--dry-run|--apply]" >&2; exit 2 ;;
+    *)
+      echo "usage: uninstall.sh [--dry-run|--apply]" >&2
+      exit 2
+      ;;
   esac
 done
 
@@ -25,7 +28,10 @@ echo "Removes chezmoi-managed dotfiles from \$HOME. Homebrew packages, 1Password
 echo "runtimes, your data, and the repo are left intact."
 echo
 
-command -v chezmoi >/dev/null 2>&1 || { echo "chezmoi not installed; nothing to do."; exit 0; }
+command -v chezmoi >/dev/null 2>&1 || {
+  echo "chezmoi not installed; nothing to do."
+  exit 0
+}
 
 backup="$HOME/.macstrap-backup/$(date +%Y%m%d-%H%M%S)"
 count=0

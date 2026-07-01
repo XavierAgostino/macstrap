@@ -2,7 +2,7 @@
 
 <h1><picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/logos/apple-dark.svg"><img src=".github/assets/logos/apple-light.svg" height="26" alt=""/></picture>&nbsp; macstrap</h1>
 
-### Bootstrap a modern macOS dev environment, in one command.
+### Bootstrap a modern macOS dev environment, in one command
 
 [![CI](https://github.com/XavierAgostino/macstrap/actions/workflows/ci.yml/badge.svg)](https://github.com/XavierAgostino/macstrap/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)

@@ -16,8 +16,8 @@ echo "Applying macOS developer defaults… (close System Settings first)"
 ############################################################
 # Keyboard, fast key repeat (great for editing/vim motions)
 ############################################################
-defaults write NSGlobalDomain KeyRepeat -int 2          # fast repeat
-defaults write NSGlobalDomain InitialKeyRepeat -int 15  # short delay
+defaults write NSGlobalDomain KeyRepeat -int 2         # fast repeat
+defaults write NSGlobalDomain InitialKeyRepeat -int 15 # short delay
 # Enable key-repeat instead of the accent popup when holding a key:
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 # Devs usually want these OFF (they mangle code/commands):
@@ -29,12 +29,12 @@ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 ############################################################
 # Finder
 ############################################################
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true   # show file extensions
-defaults write com.apple.finder ShowPathbar -bool true           # bottom path bar
-defaults write com.apple.finder ShowStatusBar -bool true         # status bar
-defaults write com.apple.finder _FXSortFoldersFirst -bool true   # folders first
-defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"  # list view
-defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"  # search current folder
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true     # show file extensions
+defaults write com.apple.finder ShowPathbar -bool true              # bottom path bar
+defaults write com.apple.finder ShowStatusBar -bool true            # status bar
+defaults write com.apple.finder _FXSortFoldersFirst -bool true      # folders first
+defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv" # list view
+defaults write com.apple.finder FXDefaultSearchScope -string "SCcf" # search current folder
 # Don't litter network/USB volumes with .DS_Store files:
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
@@ -69,7 +69,7 @@ defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 defaults write com.apple.dock tilesize -int 48
 defaults write com.apple.dock autohide -bool true
 defaults write com.apple.dock show-recents -bool false
-defaults write com.apple.dock mru-spaces -bool false   # don't reorder Spaces by use
+defaults write com.apple.dock mru-spaces -bool false # don't reorder Spaces by use
 
 ############################################################
 # Apply, restart affected apps

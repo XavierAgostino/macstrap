@@ -43,34 +43,41 @@ EOF
 
 boot() { bash "$ROOT_DIR/scripts/bootstrap.sh"; }
 
-cmd="${1:-help}"; shift || true
+cmd="${1:-help}"
+shift || true
 case "$cmd" in
   install)
     while [[ $# -gt 0 ]]; do
       case "$1" in
-        --minimal)          export MODE="minimal" ;;
-        --headless)         export MODE="headless" ;;
-        --default)          export MODE="default" ;;
-        --work)             export PROFILE="work" ;;
-        --personal)         export PROFILE="personal" ;;
-        --apps|--interactive) export APPS="interactive" ;;
-        --no-apps)          export APPS="0" ;;
-        --dry-run|-n)       export DRY_RUN="1" ;;
-        *) echo "Unknown option: $1 (run: macstrap help)" >&2; exit 1 ;;
+        --minimal) export MODE="minimal" ;;
+        --headless) export MODE="headless" ;;
+        --default) export MODE="default" ;;
+        --work) export PROFILE="work" ;;
+        --personal) export PROFILE="personal" ;;
+        --apps | --interactive) export APPS="interactive" ;;
+        --no-apps) export APPS="0" ;;
+        --dry-run | -n) export DRY_RUN="1" ;;
+        *)
+          echo "Unknown option: $1 (run: macstrap help)" >&2
+          exit 1
+          ;;
       esac
       shift
     done
     boot
     ;;
-  apps)     APPS="interactive" boot ;;
-  doctor)   bash "$ROOT_DIR/scripts/dev-doctor.sh" "$@" ;;
-  report)   bash "$ROOT_DIR/scripts/report.sh" ;;
+  apps) APPS="interactive" boot ;;
+  doctor) bash "$ROOT_DIR/scripts/dev-doctor.sh" "$@" ;;
+  report) bash "$ROOT_DIR/scripts/report.sh" ;;
   security) bash "$ROOT_DIR/scripts/security-check.sh" ;;
   uninstall) bash "$ROOT_DIR/scripts/uninstall.sh" "$@" ;;
-  diff)     chezmoi diff "$@" ;;
-  apply)    chezmoi apply "$@" ;;
-  update)   git -C "$ROOT_DIR" pull --ff-only && chezmoi apply ;;
-  version|--version|-v) git -C "$ROOT_DIR" describe --tags 2>/dev/null || echo "dev" ;;
-  help|--help|-h) usage ;;
-  *) echo "Unknown command: $cmd (run: macstrap help)" >&2; exit 1 ;;
+  diff) chezmoi diff "$@" ;;
+  apply) chezmoi apply "$@" ;;
+  update) git -C "$ROOT_DIR" pull --ff-only && chezmoi apply ;;
+  version | --version | -v) git -C "$ROOT_DIR" describe --tags 2>/dev/null || echo "dev" ;;
+  help | --help | -h) usage ;;
+  *)
+    echo "Unknown command: $cmd (run: macstrap help)" >&2
+    exit 1
+    ;;
 esac

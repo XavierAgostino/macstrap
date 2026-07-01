@@ -14,16 +14,20 @@ DOTFILES_DIR="${DOTFILES_DIR:-$HOME/Developer/workspaces/macstrap}"
 
 # --- structured checks: emit "key<TAB>status" lines ---
 run_checks() {
-  command -v brew  >/dev/null 2>&1 && printf 'homebrew\tok\n'   || printf 'homebrew\tmissing\n'
-  if   ! command -v chezmoi >/dev/null 2>&1; then printf 'chezmoi\tmissing\n'
-  elif chezmoi verify >/dev/null 2>&1;        then printf 'chezmoi\tok\n'
+  command -v brew >/dev/null 2>&1 && printf 'homebrew\tok\n' || printf 'homebrew\tmissing\n'
+  if ! command -v chezmoi >/dev/null 2>&1; then
+    printf 'chezmoi\tmissing\n'
+  elif chezmoi verify >/dev/null 2>&1; then
+    printf 'chezmoi\tok\n'
   else printf 'chezmoi\twarning\n'; fi
   command -v mise >/dev/null 2>&1 && printf 'mise\tok\n' || printf 'mise\tmissing\n'
   command -v node >/dev/null 2>&1 && printf 'node\tok\n' || printf 'node\tmissing\n'
-  [[ "$(git config --global commit.gpgsign 2>/dev/null || true)" == "true" ]] \
-    && printf 'git_signing\tok\n' || printf 'git_signing\toff\n'
-  if   ! command -v op >/dev/null 2>&1;  then printf 'onepassword\tmissing\n'
-  elif op vault list >/dev/null 2>&1;    then printf 'onepassword\tok\n'
+  [[ "$(git config --global commit.gpgsign 2>/dev/null || true)" == "true" ]] &&
+    printf 'git_signing\tok\n' || printf 'git_signing\toff\n'
+  if ! command -v op >/dev/null 2>&1; then
+    printf 'onepassword\tmissing\n'
+  elif op vault list >/dev/null 2>&1; then
+    printf 'onepassword\tok\n'
   else printf 'onepassword\tlocked\n'; fi
   command -v gitleaks >/dev/null 2>&1 && printf 'gitleaks\tok\n' || printf 'gitleaks\tmissing\n'
 }
@@ -34,20 +38,36 @@ emit_json() {
 
 safe_fix() {
   echo "Applying safe fixes (non-destructive)..."
+  # Re-enable the secret-scan git hook.
   if [[ -d "$DOTFILES_DIR/.git" ]]; then
     git -C "$DOTFILES_DIR" config core.hooksPath scripts/hooks 2>/dev/null && echo "  set core.hooksPath"
   fi
+  # Re-link the macstrap CLI onto PATH if missing.
+  if [[ -f "$DOTFILES_DIR/bin/macstrap" && ! -e "$HOME/.local/bin/macstrap" ]]; then
+    mkdir -p "$HOME/.local/bin" && ln -sf "$DOTFILES_DIR/bin/macstrap" "$HOME/.local/bin/macstrap" && echo "  linked macstrap CLI"
+  fi
+  # Ensure runtimes are installed.
   if command -v mise >/dev/null 2>&1; then mise install >/dev/null 2>&1 && echo "  ran mise install"; fi
+  # Reconcile core Homebrew packages (idempotent; installs anything missing).
+  if command -v brew >/dev/null 2>&1 && [[ -f "$DOTFILES_DIR/brew/Brewfile.core" ]]; then
+    brew bundle --file="$DOTFILES_DIR/brew/Brewfile.core" >/dev/null 2>&1 && echo "  reconciled core packages"
+  fi
   echo "  signing / 1Password / drift issues are advisory only (see docs/work-separation.md, docs/TROUBLESHOOTING.md)"
   echo
 }
 
 # --- argument handling ---
 case "${1:-}" in
-  --json) emit_json; exit 0 ;;
-  --fix)  safe_fix ;;
-  ""|--report) ;;
-  *) echo "usage: dev-doctor.sh [--json|--fix]" >&2; exit 2 ;;
+  --json)
+    emit_json
+    exit 0
+    ;;
+  --fix) safe_fix ;;
+  "" | --report) ;;
+  *)
+    echo "usage: dev-doctor.sh [--json|--fix]" >&2
+    exit 2
+    ;;
 esac
 
 # --- human-readable report ---
@@ -58,21 +78,23 @@ echo
 echo "-- Checks --"
 run_checks | while IFS=$'\t' read -r k v; do
   case "$v" in
-    ok)       c=$'\033[32m' ;;
-    warning|locked|off) c=$'\033[33m' ;;
-    *)        c=$'\033[31m' ;;
+    ok) c=$'\033[32m' ;;
+    warning | locked | off) c=$'\033[33m' ;;
+    *) c=$'\033[31m' ;;
   esac
   printf '  %-13s %s%s\033[0m\n' "$k" "$c" "$v"
 done
 echo
 
 echo "-- System --"
-sw_vers; echo "arch: $(uname -m)"; echo "shell: ${SHELL:-unknown}"
+sw_vers
+echo "arch: $(uname -m)"
+echo "shell: ${SHELL:-unknown}"
 echo
 
 echo "-- Versions --"
 for c in "chezmoi --version" "mise --version" "node --version" "pnpm --version" \
-         "uv --version" "git --version"; do
+  "uv --version" "git --version"; do
   # shellcheck disable=SC2086
   $c 2>/dev/null | sed -n '1p' || true
 done
@@ -86,6 +108,6 @@ echo "-- chezmoi --"
 if command -v chezmoi >/dev/null 2>&1; then
   echo "source:  $(chezmoi source-path 2>/dev/null)"
   echo "profile: $(chezmoi execute-template '{{ .profile }}' 2>/dev/null)"
-  chezmoi verify >/dev/null 2>&1 && echo "state:   clean (live matches source)" \
-    || echo "state:   drift (run 'chezmoi diff')"
+  chezmoi verify >/dev/null 2>&1 && echo "state:   clean (live matches source)" ||
+    echo "state:   drift (run 'chezmoi diff')"
 fi
