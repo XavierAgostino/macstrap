@@ -1,0 +1,4 @@
+# Vesper-adjacent syntax theme (see docs/COLORS.md). TwoDark is the closest
+# bundled bat theme to the Ghostty Vesper ANSI palette.
+--theme=TwoDark
+--style=numbers,changes,header

@@ -258,3 +258,4 @@ else
   muted "Re-check with: macstrap doctor"
 fi
 muted "Open a new terminal (or run 'exec zsh') to load the shell."
+muted "Open Cursor or VS Code once to finish the Vesper theme install."

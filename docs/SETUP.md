@@ -68,6 +68,9 @@ Complete these after verify:
 - [ ] **Commit signing** (recommended) — [work-separation.md](work-separation.md)
 - [ ] **AI config** — [ai/README.md](../ai/README.md)
 - [ ] **Terminal** — set Ghostty as default
+- [ ] **Cursor / VS Code** — open once after bootstrap so the Vesper extension
+  installs; reload the window if the theme looks missing (`Cmd+Shift+P` →
+  **Developer: Reload Window**). **Cmd+Shift+G** opens Ghostty from the editor.
 
 ## 6. Optional CLIs (per project, not per machine)
 

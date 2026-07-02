@@ -17,19 +17,26 @@ colors but a language: each color means one thing everywhere (prompt, `eza`,
 | `peach` | `#e0b18f` | Docs, warnings, human attention |
 | `red` | `#f4777f` | Errors, failed checks, destructive actions |
 | `muted` | `#8a8a8a` | Git branch and metadata (ambient context), durations |
-| `fg` | `#eeeeee` | Normal, readable text |
+| `fg` | `#ffffff` | Normal, readable text (matches Ghostty Vesper) |
 | `bg` | `#101010` | Background |
 
 ## Where it is applied
 
+- **Ghostty** (`dot_config/ghostty/config`): `theme = Vesper` sets the ANSI
+  palette that `eza` and terminal output inherit.
 - **Starship** (`dot_config/starship.toml`): `directory = lavender` (leads),
   `git_branch = muted` and `git_status = lavender_dim` (ambient git context),
   prompt `= pink_dim` (the one accent), errors `= red`, `cmd_duration = muted`.
-  The path leads; git recedes.
-- **fzf** (`FZF_DEFAULT_OPTS`): lavender prompt, pink highlight/pointer, green
-  marker, muted info.
-- **Ghostty** (`dot_config/ghostty/config`): `theme = Vesper` sets the ANSI
-  palette that `eza`, `bat`, `delta`, and everything else inherit.
+- **fzf** (`FZF_DEFAULT_OPTS` in `private_dot_zshrc.tmpl`): lavender prompt,
+  pink highlight/pointer, green marker, muted info.
+- **zsh-syntax-highlighting**: commands/paths = lavender, aliases = pink,
+  strings = green, comments = muted, errors = red.
+- **zsh-autosuggestions**: muted gray ghost text.
+- **bat** (`dot_config/bat/config`): TwoDark theme (closest bundled match to Vesper).
+- **delta** (`dot_gitconfig.tmpl`): minus = red, plus = green, file headers = lavender.
+- **Cursor / VS Code** (`private_Library/.../User/settings.json`): Vesper theme,
+  lifted UI chrome, Geist Mono, integrated terminal ANSI aligned with Ghostty;
+  **Cmd+Shift+G** opens Ghostty as the external terminal.
 
 ## Readability
 
