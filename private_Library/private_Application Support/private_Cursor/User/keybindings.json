@@ -1,0 +1,6 @@
+[
+    {
+        "key": "cmd+shift+g",
+        "command": "workbench.action.terminal.openNativeConsole"
+    }
+]

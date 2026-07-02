@@ -40,6 +40,7 @@ vscode "eamodio.gitlens"
 vscode "ms-python.python"
 vscode "ms-azuretools.vscode-docker"
 vscode "pkief.material-icon-theme"
+vscode "raunofreiberg.vesper"
 
 # --- Optional (uncomment what you want) ---
 # cask "firefox"

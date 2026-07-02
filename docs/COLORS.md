@@ -34,6 +34,9 @@ colors but a language: each color means one thing everywhere (prompt, `eza`,
 - **zsh-autosuggestions**: muted gray ghost text.
 - **bat** (`dot_config/bat/config`): TwoDark theme (closest bundled match to Vesper).
 - **delta** (`dot_gitconfig.tmpl`): minus = red, plus = green, file headers = lavender.
+- **Cursor / VS Code** (`private_Library/.../User/settings.json`): Vesper theme,
+  lifted UI chrome, Geist Mono, integrated terminal ANSI aligned with Ghostty;
+  **Cmd+Shift+G** opens Ghostty as the external terminal.
 
 ## Readability
 
