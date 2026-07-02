@@ -65,7 +65,9 @@ Full walkthrough: [`docs/SETUP.md`](docs/SETUP.md).
 
 <p align="center"><strong>Default apps</strong></p>
 
-<div align="center">
+<table align="center">
+  <tr>
+    <td align="center">
 <table>
   <tr>
     <td align="center" width="104"><picture><source media="(prefers-color-scheme: dark)" srcset=".github/assets/logos/cursor-dark.svg"><img src=".github/assets/logos/cursor.svg" height="36" alt="Cursor"/></picture><br/><sub><b>Cursor</b></sub></td>
@@ -92,7 +94,9 @@ Full walkthrough: [`docs/SETUP.md`](docs/SETUP.md).
     <td align="center" width="104"><img src=".github/assets/logos/spotify.svg" height="36" alt="Spotify"/><br/><sub><b>Spotify</b></sub></td>
   </tr>
 </table>
-</div>
+    </td>
+  </tr>
+</table>
 
 <p align="center">Customize via <code>brew/Brewfile.{core,apps,personal,work}</code> · full list in <a href="docs/SETUP.md#7-default-toolchain-and-apps">SETUP §7</a></p>
 
@@ -115,30 +119,12 @@ macstrap logs       # step logs from the last run
 
 <p align="center">Scripted walkthroughs — <code>macstrap demo &lt;name&gt;</code> installs nothing.</p>
 
-<div align="center">
-<table>
-  <tr>
-    <th>Demo</th>
-    <th>Command</th>
-  </tr>
-  <tr>
-    <td align="center">Setup preview</td>
-    <td align="center"><code>macstrap demo</code></td>
-  </tr>
-  <tr>
-    <td align="center">App picker</td>
-    <td align="center"><code>macstrap demo apps</code></td>
-  </tr>
-  <tr>
-    <td align="center">CLI picker</td>
-    <td align="center"><code>macstrap demo cli</code></td>
-  </tr>
-  <tr>
-    <td align="center">Doctor</td>
-    <td align="center"><code>macstrap demo doctor</code></td>
-  </tr>
-</table>
-</div>
+| Demo | Command |
+| --- | --- |
+| Setup preview | `macstrap demo` |
+| App picker | `macstrap demo apps` |
+| CLI picker | `macstrap demo cli` |
+| Doctor | `macstrap demo doctor` |
 
 <p align="center"><strong>App picker</strong></p>
 
@@ -210,34 +196,13 @@ macstrap uninstall     # dry-run back-out (--apply to perform)
 
 ## Documentation
 
-<div align="center">
-<table>
-  <tr>
-    <th>If you…</th>
-    <th>Start here</th>
-  </tr>
-  <tr>
-    <td align="center">Just installed</td>
-    <td align="center"><a href="docs/SETUP.md">SETUP.md</a></td>
-  </tr>
-  <tr>
-    <td align="center">Work laptop</td>
-    <td align="center"><a href="docs/work-separation.md">work-separation.md</a></td>
-  </tr>
-  <tr>
-    <td align="center">Fork / customize</td>
-    <td align="center"><a href="docs/README.md">docs/README.md</a></td>
-  </tr>
-  <tr>
-    <td align="center">Automate / agent</td>
-    <td align="center"><a href="docs/AGENT-USAGE.md">AGENT-USAGE.md</a></td>
-  </tr>
-  <tr>
-    <td align="center">Something broke</td>
-    <td align="center"><a href="docs/TROUBLESHOOTING.md">TROUBLESHOOTING.md</a></td>
-  </tr>
-</table>
-</div>
+| If you… | Start here |
+| --- | --- |
+| Just installed | [SETUP.md](docs/SETUP.md) |
+| Work laptop | [work-separation.md](docs/work-separation.md) |
+| Fork / customize | [docs/README.md](docs/README.md) |
+| Automate / agent | [AGENT-USAGE.md](docs/AGENT-USAGE.md) |
+| Something broke | [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) |
 
 ## License
 
